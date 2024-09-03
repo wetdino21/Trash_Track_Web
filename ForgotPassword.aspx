@@ -126,7 +126,7 @@
               <div class="tab-content pt-2">
                   
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                  <h5 class="card-title" style="background-color: #043108;" >Change Password</h5>
+                  <h5 class="card-title" style="color: aquamarine;" >CHANGE PASSWORD</h5>   
                   <form runat="server">
 
                      <div class="row mb-3">

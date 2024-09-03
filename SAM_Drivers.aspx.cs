@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace Capstone
 {
-    public partial class Account_Manager_ManageAccount : System.Web.UI.Page
+    public partial class SAM_Drivers : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

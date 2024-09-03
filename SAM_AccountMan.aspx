@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Account_Manager_ManageAccount.aspx.cs" Inherits="Capstone.Account_Manager_ManageAccount" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SAM_AccountMan.aspx.cs" Inherits="Capstone.Account_Manager_ManageAccount" %>
 
 <!DOCTYPE html>
 
@@ -107,7 +107,7 @@
 <script type="text/javascript">
     function search() {
         var searchText = document.getElementById('<%= txtSearch.ClientID %>').value.toUpperCase();
-        var grid = document.getElementById('<%= gridViewAdmin.ClientID %>');
+        var grid = document.getElementById('<%= gridViewAccountMan.ClientID %>');
 
         for (var i = 1; i < grid.rows.length; i++) {
             var row = grid.rows[i];
@@ -244,7 +244,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="Admin_Dashboard.aspx">
+        <a class="nav-link collapsed" href="SAM_Dashboard.aspx">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -260,12 +260,12 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
             <li>
-                <a href="Admin_Manage_Admin.aspx" class="active">
+                <a href="SAM_AccountMan.aspx" class="active">
                     <i class="bi bi-circle"></i><span>Account Manager</span>
                 </a>
             </li>
             <li>
-                <a href="WAREHOUSE_ADD_CATEGORY.aspx">
+                <a href="SAM_Dispatcher.aspx">
                     <i class="bi bi-circle"></i><span>Dispatcher</span>
                 </a>
             </li>
@@ -349,9 +349,9 @@
       <h1 style="padding-top: 20px; color:chartreuse">Manage Accounts</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="Admin_Dashboard.aspx">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="SAM_Dashboard.aspx">Dashboard</a></li>
           <li class="breadcrumb-item"><a href="admin_manage_account.aspx">Manage Accounts   </a></li>
-          <li class="breadcrumb-item">Admin</li>
+          <li class="breadcrumb-item">Account Manager </li>
 
         </ol>
       </nav>
@@ -429,141 +429,85 @@
               </div>
           </div>
       </div>
+
+
       <section style="background-color: #052507; padding: 25px; border-radius: 8px; box-shadow: 0 0 5px rgba(0, 0, 0, .2)">
+    <div>
+        <asp:ImageMap ID="ImageMap1" runat="server" ImageUrl="Pictures//box_format.png" Style="float: right; margin-right: 0px; margin-top: 0px; width: 50px"></asp:ImageMap>
+    </div>
+    <div style="margin-top: 50px; margin-bottom: 30px">
+        <asp:TextBox Style="border-radius: 10px; padding-left: 10px; padding: 2px; margin-top: 7px; border-color: aquamarine; border-width: 3px" placeholder="Search" ID="txtSearch" runat="server" oninput="search();" AutoPostBack="false"></asp:TextBox>
+        <button type="button" class="btn btn-primary" style="margin: 10px; float: right; background-color: #052507; border-color: aquamarine; border-radius: 8px; border-width: 3px" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Account Manager +
+        </button>
+    </div>
 
-          <div>
-              <asp:ImageMap ID="ImageMap1" runat="server" ImageUrl="Pictures//box_format.png" Style="float: right; margin-right: 0px; margin-top: 0px; width: 50px"></asp:ImageMap>
-          </div>
-          <div style="margin-top: 50px; margin-bottom: 30px">
-              <asp:TextBox Style="border-radius: 10px; padding-left: 10px; padding: 2px; margin-top: 7px; border-color: aquamarine; border-width: 3px" placeholder="Search" ID="txtSearch" runat="server" oninput="search();" AutoPostBack="false"></asp:TextBox>
-              <button type="button" class="btn btn-primary" style="margin: 10px; float: right; background-color: #052507; border-color: aquamarine; border-radius: 8px; border-width: 3px" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Add Account Manager +
-              </button>
-          </div>
+    <div class="gridview-container">
+        <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridViewAccountMan" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True"
+            DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" Font-Size="10px" ForeColor="White" GridLines="None">
+            <AlternatingRowStyle BackColor="#041d06" />
 
-<div class="gridview-container">
-    <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridViewAdmin" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True"
-        DataKeyNames="_id" AllowPaging="False" CellPadding="20" Font-Size="10px" ForeColor="White" GridLines="None">
-    <AlternatingRowStyle BackColor="#041d06" />
+            <Columns>
+                <asp:BoundField DataField="acc_id" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="acc_id" ItemStyle-Width="100px">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_fname" HeaderText="First Name" SortExpression="acc_fname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_mname" HeaderText="M.I" SortExpression="acc_mname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_lname" HeaderText="Last Name" SortExpression="acc_lname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:BoundField DataField="acc_status" HeaderText="Status" SortExpression="acc_status" ItemStyle-CssClass="columns_label">
+                    <ItemStyle Width="100px"></ItemStyle>
+                </asp:BoundField>
+                <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="update" runat="server">
+                            <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
+                        </asp:LinkButton>
+                        <asp:LinkButton ID="Remove" runat="server">
+                            <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Remove" Font-Size="10px" />
+                        </asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
 
-    <Columns>
-        <asp:BoundField DataField="_id" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="_id" ItemStyle-Width="100px">
-            <ItemStyle Width="100px"></ItemStyle>
-        </asp:BoundField>
-        <asp:BoundField DataField="firstname" HeaderText="Firstname" SortExpression="firstname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-            <ItemStyle Width="100px"></ItemStyle>
-        </asp:BoundField>
-        <asp:BoundField DataField="mi" HeaderText="M.I" SortExpression="mi" ItemStyle-Width="100px"  ItemStyle-CssClass="columns_label">
-            <ItemStyle Width="100px"></ItemStyle>
-        </asp:BoundField>
-
-        <asp:BoundField DataField="lastname" HeaderText="Lastname" SortExpression="lastname" ItemStyle-Width="100px"  ItemStyle-CssClass="columns_label">
-            <ItemStyle Width="100px"></ItemStyle>
-        </asp:BoundField>
-          <asp:BoundField DataField="username" HeaderText="Username" SortExpression="username" />
-
-          <asp:TemplateField HeaderText="Contact" SortExpression="contact"  ItemStyle-CssClass="columns_label">
-              <EditItemTemplate>
-                  <asp:TextBox ID="contact" runat="server" Text='<%# Bind("contact") %>' type="number" Width="80px"></asp:TextBox>
-              </EditItemTemplate>
-              <ItemTemplate>
-                  <asp:Label ID="contact" runat="server" Text='<%# Eval("contact") %>'></asp:Label>
-              </ItemTemplate>
-          </asp:TemplateField>
-
-          <asp:TemplateField HeaderText="Email" SortExpression="email"   ItemStyle-CssClass="columns_label">
-              <EditItemTemplate>
-                  <asp:TextBox ID="empRole" runat="server" Text='<%# Bind("email") %>' type="number" Width="80px"></asp:TextBox>
-              </EditItemTemplate>
-              <ItemTemplate>
-                  <asp:Label ID="lblQNTY" runat="server" Text='<%# Eval("email") %>'></asp:Label>
-              </ItemTemplate>
-              <ItemStyle Width="100px"></ItemStyle>
-
-          </asp:TemplateField>
-
-          <asp:TemplateField HeaderText="Created at" SortExpression="date_reg"  ItemStyle-CssClass="columns_label">
-              <EditItemTemplate>
-                  <asp:TextBox ID="txtDateReg" runat="server" Text='<%# Bind("date_reg") %>' Enabled="false" Width="100px"></asp:TextBox>
-              </EditItemTemplate>
-              <ItemTemplate>
-                  <asp:Label ID="lblDateReg" runat="server" Text='<%# Eval("date_reg") %>'></asp:Label>
-              </ItemTemplate>
-          </asp:TemplateField>
-
-        <asp:TemplateField HeaderText="Updated at" SortExpression="date_upd" ItemStyle-CssClass="columns_label">
-            <EditItemTemplate>
-                <asp:TextBox ID="txtDateUpd" runat="server" Text='<%# Bind("date_upd") %>' Enabled="false" Width="100px"></asp:TextBox>
-            </EditItemTemplate>
-            <ItemTemplate>
-                <asp:Label ID="lblDateUpd" runat="server" Text='<%# Eval("date_upd") %>'></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <asp:TemplateField HeaderText="Status" SortExpression="status" ItemStyle-CssClass="columns_label">
-            <ItemTemplate>
-                <%--<asp:Button ID="lbstat" runat="server" Text='<%# Eval("status") + " ▲"%>'></asp:Button>--%>
-
-                <%--<asp:Button Style="font-size: 10px; color: orangered; font-weight: bold; font-size: 10px" ID="btnUnsuspend" runat="server" Text='<%# Eval("status") + " ▼"%>'
-                    CssClass="arrow-button" OnClick="Unsuspend_Click"
-                    OnClientClick="return confirm('Are you sure you want to Unsuspend this admin?');"
-                    Visible='<%# Eval("status").ToString() == "suspended" %>' CommandArgument='<%# Eval("_id") %>' />
-
-                <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold; font-size: 10px" ID="btnSuspend" runat="server" Text='<%# Eval("status") + " ▲"%>'
-                    CssClass="arrow-button ri-arrow-up-fill" OnClick="Suspend_Click"
-                    OnClientClick="return confirm('Are you sure you want to Suspend this admin?');"
-                    Visible='<%# Eval("status").ToString() == "active" %>' CommandArgument='<%# Eval("_id") %>' />--%>
-
-
-                <asp:Button Style="font-size: 10px; color: orangered; font-weight: bold; font-size: 10px" ID="btnUnsuspend" runat="server"/>
-
-                <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold; font-size: 10px" ID="btnSuspend" runat="server"/>
+            <RowStyle BackColor="#052507" BorderStyle="Solid" BorderColor="#0a4d1d" />
+            <EditRowStyle Width="10%" BackColor="#7C6F57"></EditRowStyle>
+            <FooterStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="mediumaquamarine" BorderStyle="None" />
+            <PagerStyle BorderColor="#CC9900" Font-Size="20px" BackColor="White" ForeColor="White" HorizontalAlign="Center" />
+            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="White" />
+            <SortedAscendingCellStyle BackColor="Black" />
+            <SortedAscendingHeaderStyle BackColor="#246B61" />
+            <SortedDescendingCellStyle BackColor="Black" />
+            <SortedDescendingHeaderStyle BackColor="#15524A" />
+        </asp:GridView>
+    </div>
+</section>
 
 
 
 
-            </ItemTemplate>
-          </asp:TemplateField>
 
 
 
-        <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
-            <ItemTemplate>
-
-                <%--<asp:LinkButton ID="update" runat="server" OnClick="Update_Click" CommandArgument='<%# Eval("_id") %>'>
-                    <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" /></asp:LinkButton>
-                <asp:LinkButton ID="Remove" runat="server" OnClick="Remove_Click" CommandArgument='<%# Eval("_id") %>' OnClientClick="return confirm('Are you sure you want to remove this admin?');">
-                    <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Edit" Font-Size="10px" /></asp:LinkButton>--%>
-
-                <asp:LinkButton ID="update" runat="server">
-                    <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
-                </asp:LinkButton>
-                <asp:LinkButton ID="Remove" runat="server">
-                    <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Edit" Font-Size="10px" />
-                </asp:LinkButton>
-
-
-            </ItemTemplate>
-        </asp:TemplateField>
-
-    </Columns>
-
-      <RowStyle BackColor="#052507" BorderStyle="Solid" BorderColor="#0a4d1d"/>
-      <EditRowStyle Width="10%" BackColor="#7C6F57"></EditRowStyle>
-      <FooterStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
-      <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="mediumaquamarine" BorderStyle="None" />
-      <PagerStyle BorderColor="#CC9900" Font-Size="20px" BackColor="White" ForeColor="White" HorizontalAlign="Center" />
-      <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="White" />
-      <SortedAscendingCellStyle BackColor="Black" />
-      <SortedAscendingHeaderStyle BackColor="#246B61" />
-      <SortedDescendingCellStyle BackColor="Black" />
-      <SortedDescendingHeaderStyle BackColor="#15524A" />
-  </asp:GridView>
-        </div>
-      </section>
-
-
- <asp:LinkButton ID="LinkButton1" runat="server"></asp:LinkButton>
+      <asp:LinkButton ID="LinkButton1" runat="server"></asp:LinkButton>
 <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 <asp:Panel ID="updatePanel" CssClass="card" runat="server" style="background-color: #052507; border: 1px solid aquamarine;">
     <ContentTemplate>
@@ -741,10 +685,10 @@
       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#<%= gridViewAdmin.ClientID %> .edit-button').on('click', function () {
+        $('#<%= gridViewAccountMan.ClientID %> .edit-button').on('click', function () {
             var rowIndex = $(this).closest('tr').index();
-            $('#<%= gridViewAdmin.ClientID %> tr').height('auto'); // Reset all rows to auto height
-            $('#<%= gridViewAdmin.ClientID %> tr:eq(' + rowIndex + ')').height($('#<%= gridViewAdmin.ClientID %> tr:eq(' + rowIndex + ')').height());
+            $('#<%= gridViewAccountMan.ClientID %> tr').height('auto'); // Reset all rows to auto height
+            $('#<%= gridViewAccountMan.ClientID %> tr:eq(' + rowIndex + ')').height($('#<%= gridViewAccountMan.ClientID %> tr:eq(' + rowIndex + ')').height());
         });
     });
 </script>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Account_ anager_Dashboard.aspx.cs" Inherits="Capstone.Account_Manager_Dashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SAM_Dashboard.aspx.cs" Inherits="Capstone.Account_Manager_Dashboard" %>
 
 <!DOCTYPE html>
 
@@ -278,7 +278,7 @@
                 <ul class="sidebar-nav" id="sidebar-nav">
 
                     <li class="nav-item">
-                        <a class="nav-link " href="Admin_Dashboard.aspx">
+                        <a class="nav-link " href="SAM_Dashboard.aspx">
                             <i class="bi bi-grid" style="color: aquamarine"></i>
                             <span style="color: aquamarine">Dashboard</span>
                         </a>
@@ -295,12 +295,12 @@
                         </a>
                         <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="Admin_Manage_Admin.aspx">
+                                <a href="SAM_AccountMan.aspx">
                                     <i class="bi bi-circle"></i><span>Account Manager</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="WAREHOUSE_ADD_CATEGORY.aspx">
+                                <a href="SAM_Dispatcher.aspx">
                                     <i class="bi bi-circle"></i><span>Dispatcher</span>
                                 </a>
                             </li>

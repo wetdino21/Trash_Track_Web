@@ -249,13 +249,13 @@ namespace Capstone
         protected global::System.Web.UI.WebControls.TextBox txtSearch;
 
         /// <summary>
-        /// gridViewAdmin control.
+        /// gridViewAccountMan control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridViewAdmin;
+        protected global::System.Web.UI.WebControls.GridView gridViewAccountMan;
 
         /// <summary>
         /// LinkButton1 control.
