@@ -32,7 +32,7 @@ namespace Capstone
         }
 
 
-
+        //ssdsdsdss
         protected void AccountManList()
         {
             using (var db = new NpgsqlConnection(con))
