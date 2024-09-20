@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SAM_AccountMan.aspx.cs" Inherits="Capstone.Account_Manager_ManageAccount" %>
+<%--<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>--%>
 
 <!DOCTYPE html>
 
@@ -10,6 +11,11 @@
   <title>PBC - Dashboard</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+
+
+    <%--hide unhide pass--%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
 
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
@@ -33,6 +39,43 @@
   <link href="assets/css/style.css" rel="stylesheet">
     <%--#052507--%>
     <style>
+    /*Panel scrollable height*/
+    /*.scrollable-panel {
+        max-height: 95vh;*/ /* Adjust this value as needed */
+        /*overflow-y: auto;*/ /* Enables vertical scrolling */
+    /*}*/
+
+      .scrollable-panel {
+        max-height: 680px; /* Adjust the height as needed */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Hides horizontal scrolling */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        padding: 20px; /* Padding inside the panel */
+        background-color: #f9f9f9; /* Light background color */
+        border: 1px solid #ddd; /* Light border */
+        box-sizing: border-box; /* Includes padding and border in element's total width and height */
+    }
+
+    .scrollable-panel::-webkit-scrollbar {
+        width: 12px; /* Increase width to make scrollbar less intrusive */
+    }
+
+    .scrollable-panel::-webkit-scrollbar-thumb {
+        background-color: #025539; /* Color of the scrollbar thumb */
+        border-radius: 6px; /* Rounded scrollbar thumb */
+    }
+
+    .scrollable-panel::-webkit-scrollbar-thumb:hover {
+        background-color: #555; /* Darker color on hover */
+    }
+
+    .scrollable-panel::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Color of the scrollbar track */
+        border-radius: 6px; /* Rounded scrollbar track */
+    }
+
+
     /* Add this style to change the modal header and footer background color */
     .modal-header,
     .modal-footer {
@@ -190,7 +233,7 @@
               <h6>
                   <asp:Label ID="Label1" runat="server" Text=""></asp:Label></h6>
               <span>
-                  <asp:Label ID="Label3" runat="server" Text="Administrator"></asp:Label></span>
+                  <asp:Label ID="Label3" runat="server" Text="Super Account Manager"></asp:Label></span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -200,7 +243,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="Admin_Change_Pass.aspx">
+              <a class="dropdown-item d-flex align-items-center" href="SAM_AccountSettings.aspx">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
               </a>
@@ -384,51 +427,77 @@
                   </div>
                   <div class="modal-body">
                       <div class="mb-3">
-                          <asp:Label ID="Label13" runat="server" Text="Firstname" for="inputText" style="color: chartreuse; margin-top: 10px"></asp:Label>
-                          <asp:TextBox ID="emp_firstname" runat="server" class="form-control" style="margin-top: 10px"></asp:TextBox>
+                          <asp:Label ID="Label13" runat="server" Text="Firstname" for="inputText" Style="color: chartreuse; margin-top: 10px"></asp:Label>
+                          <asp:TextBox ID="emp_firstname" runat="server" class="form-control" Style="margin-top: 10px" onkeyup="validateFirstname()"></asp:TextBox>
+                          <span id="emp_firstnameError" class="text-danger"></span>
                       </div>
                       <div class="mb-3">
-                          <asp:Label ID="Label4" runat="server" Text="M.I" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_mi" runat="server" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
+                          <asp:Label ID="Label4" runat="server" Text="M.I" for="inputText" Style="color: chartreuse"></asp:Label>
+                          <asp:TextBox ID="emp_mi" runat="server" class="form-control" Style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
+
                       </div>
                       <div class="mb-3">
-                          <asp:Label ID="Label5" runat="server" Text="Lastname" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_lastname" runat="server" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
+                          <asp:Label ID="Label5" runat="server" Text="Lastname" for="inputText" Style="color: chartreuse"></asp:Label>
+                          <asp:TextBox ID="emp_lastname" runat="server" class="form-control" Style="margin-top: 10px" onkeyup="validateLastname()"></asp:TextBox>
+                          <span id="emp_lastnameError" class="text-danger"></span>
                       </div>
                       <div class="mb-3">
-                          <asp:Label ID="Label6" runat="server" Text="Username" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_username" runat="server" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
+                          <asp:Label ID="Label10" runat="server" Text="Email" for="inputText" Style="color: chartreuse"></asp:Label>
+                          <asp:TextBox ID="emp_email" runat="server" class="form-control" Style="margin-top: 10px" onkeyup="validateEmail()"></asp:TextBox>
+                          <span id="emp_emailError" class="text-danger"></span>
+                          <asp:HiddenField ID="emailStatus" runat="server" />
+                      </div>
+                      <div class="col-12 mb-3">
+                          <!-- Password Label -->
+                          <asp:Label ID="Label7" runat="server" Text="Password" for="inputText" Style="color: chartreuse"></asp:Label>
+
+                          <!-- Password TextBox with Toggle Visibility Icon -->
+                          <div class="input-group" style="margin-top: 10px;">
+                              <asp:TextBox ID="emp_pass" runat="server" class="form-control" type="password"></asp:TextBox>
+
+                              <!-- Toggle Password Visibility Icon, positioned inline with the textbox -->
+                              <span class="input-group-text" style="cursor: pointer;" onclick="togglePasswords()">
+                                  <i id="passIcon" class="fas fa-eye-slash"></i>
+                              </span>
+                          </div>
+
+                          <!-- Error Message for Password Validation -->
+                          <span id="emp_passError" class="text-danger"></span>
+                      </div>
+
+                      <div class="mb-3">
+                          <asp:Label ID="Label8" runat="server" Text="Contact No." for="inputText" Style="color: chartreuse"></asp:Label>
+                          <asp:TextBox ID="emp_contact" runat="server" class="form-control" Style="margin-top: 10px" onkeyup="validateContact()"></asp:TextBox>
+                          <span id="emp_contactError" class="text-danger"></span>
                       </div>
                       <div class="mb-3">
-                          <asp:Label ID="Label7" runat="server" Text="Password" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_pass" runat="server" type="password" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
+                          <asp:Label ID="Label6" runat="server" Text="Role" for="inputText" Style="color: chartreuse"></asp:Label>
+                          <asp:DropDownList ID="emp_role" class="form-select" aria-label="Default select example" runat="server">
+                              <asp:ListItem Selected="True" disabled>&lt;--Select Role--&gt;</asp:ListItem>
+                              <asp:ListItem>Super Account Manager</asp:ListItem>
+                              <asp:ListItem>Account Manager</asp:ListItem>
+                          </asp:DropDownList>
+                          <span id="emp_roleError" class="text-danger"></span>
                       </div>
+
                       <div class="mb-3">
-                          <asp:Label ID="Label8" runat="server" Text="Contact No." for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_contact" runat="server" min="1" type="Number" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
+                          <asp:Label ID="Label12" runat="server" Text="Picture" for="inputText" Style="color: chartreuse"></asp:Label>
+                          <asp:FileUpload ID="formFile" class="form-control" runat="server" OnChange="previewImage1()" />
+<%--                          <img id="imagePreview" src="Pictures/blank_prof.png" alt="Image Preview" style="max-width: 200px; margin-top: 10px;" />--%>
+                          <asp:ImageMap ID="imagePreview" src="Pictures/blank_prof.png" runat="server" alt="Image Preview" CssClass="img-thumbnail mt-2" Style="max-width: 150px; margin-top: 10px;"></asp:ImageMap>
+                          <span id="fileError" style="color: red; display: none;">File uploaded is not an image.</span>
                       </div>
-                      <div class="mb-3">
-                          <asp:Label ID="Label9" runat="server" Text="Address" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_address" runat="server" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
-                      </div>
-                      <div class="mb-3">
-                          <asp:Label ID="Label10" runat="server" Text="Email" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_email" runat="server" class="form-control" style="margin-top: 10px; margin-bottom: 10px"></asp:TextBox>
-                      </div>
-                      <div class="mb-3">
-                          <asp:Label ID="Label12" runat="server" Text="Picture" for="inputText" style="color: chartreuse"></asp:Label>
-                          <asp:FileUpload ID="formFile" class="form-control" runat="server" />
-                      </div>
+
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-<%--                      <asp:Button class="btn btn-primary" ID="submitBtn" runat="server" Text="Submit Form" OnClick="submitBtn_Click" />--%>
-                          <asp:Button class="btn btn-primary" ID="submitBtn" runat="server" Text="Submit Form" />
-
+                      <asp:Button ID="ClearForm" Text="Close" runat="server" class="btn btn-secondary" data-bs-dismiss="modal" OnClick="ClearForm_Click" />
+                      <asp:Button class="btn btn-primary" ID="submitBtn" runat="server" Text="Submit Form" OnClick="submitBtn_Click" />
                   </div>
               </div>
           </div>
       </div>
+
+
 
 
       <section style="background-color: #052507; padding: 25px; border-radius: 8px; box-shadow: 0 0 5px rgba(0, 0, 0, .2)">
@@ -442,6 +511,93 @@
         </button>
     </div>
 
+          <%--ADD BUTTON--%>
+          <div class="gridview-container">
+    <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridView1" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True"
+        DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" Font-Size="10px" ForeColor="#333333" GridLines="None">
+        
+        <AlternatingRowStyle BackColor="#e8f7e4" />
+
+        <Columns>
+            <asp:BoundField DataField="acc_id" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="acc_id" ItemStyle-Width="100px">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_fname" HeaderText="First Name" SortExpression="acc_fname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_mname" HeaderText="M.I" SortExpression="acc_mname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_lname" HeaderText="Last Name" SortExpression="acc_lname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_status" HeaderText="Status" SortExpression="acc_status" ItemStyle-CssClass="columns_label">
+                <ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+
+            <asp:TemplateField HeaderText="Status" SortExpression="status" ItemStyle-CssClass="columns_label">
+                <ItemTemplate>
+                    <asp:Button Style="font-size: 10px; color: orangered; font-weight: bold;" ID="btnUnsuspend" runat="server" Text='<%# Eval("acc_status") + " ▼"%>'
+                        CssClass="arrow-button" OnClick="Unsuspend_Click"
+                        OnClientClick="return confirm('Are you sure you want to Unsuspend this admin?');"
+                        Visible='<%# Eval("acc_status").ToString() == "Suspend" %>' CommandArgument='<%# Eval("acc_id") %>' />
+
+
+                    <asp:Label ID="Label11" ForeColor="White" runat="server"
+                        Text='<%# Eval("acc_status") + " ▼"%>'
+                        Visible='<%# Eval("acc_status").ToString() != "Suspend" && Eval("acc_status").ToString() != "Active" %>'
+                        CommandArgument='<%# Eval("acc_id") %>'></asp:Label>
+
+
+                    <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold;" ID="btnSuspend" runat="server" Text='<%# Eval("acc_status") + " ▲"%>'
+                        CssClass="arrow-button ri-arrow-up-fill" OnClick="Suspend_Click"
+                        OnClientClick="return confirm('Are you sure you want to Suspend this admin?');"
+                        Visible='<%# Eval("acc_status").ToString() == "Active" %>' CommandArgument='<%# Eval("acc_id") %>' />
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
+                <ItemTemplate>
+                    <asp:LinkButton ID="update" runat="server" OnClick="Update_Click" CommandArgument='<%# Eval("acc_id") %>'>
+                        <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="Remove" runat="server" OnClick="Remove_Click" CommandArgument='<%# Eval("acc_id") %>' OnClientClick="return confirm('Are you sure you want to remove this account manager?');">
+                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Edit" Font-Size="10px" />
+                    </asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+        </Columns>
+
+        <RowStyle BackColor="#ffffff" BorderStyle="Solid" BorderColor="#90ee90" />
+        
+        <HeaderStyle BackColor="#90ee90" Font-Bold="True" ForeColor="#333333" BorderStyle="None" />
+        
+        <FooterStyle BackColor="#90ee90" Font-Bold="True" ForeColor="#333333" />
+
+        <SelectedRowStyle BackColor="#ccffcc" Font-Bold="True" ForeColor="#333333" />
+
+        <PagerStyle BorderColor="#90ee90" Font-Size="12px" BackColor="White" ForeColor="#333333" HorizontalAlign="Center" />
+
+        <SortedAscendingHeaderStyle BackColor="#c0e8c0" />
+        <SortedDescendingHeaderStyle BackColor="#a8d8a8" />
+    </asp:GridView>
+</div>
+
+
+    <%--EDIT BUTTON--%>
     <div class="gridview-container">
         <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridViewAccountMan" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True"
             DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" Font-Size="10px" ForeColor="White" GridLines="None">
@@ -472,19 +628,51 @@
                 <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-CssClass="columns_label">
                     <ItemStyle Width="100px"></ItemStyle>
                 </asp:BoundField>
-                <asp:BoundField DataField="acc_status" HeaderText="Status" SortExpression="acc_status" ItemStyle-CssClass="columns_label">
+                <%--<asp:BoundField DataField="acc_status" HeaderText="Status" SortExpression="acc_status" ItemStyle-CssClass="columns_label">
                     <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
+                </asp:BoundField>--%>
+                <%--<asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
                     <ItemTemplate>
                         <asp:LinkButton ID="update" runat="server">
                             <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
                         </asp:LinkButton>
                         <asp:LinkButton ID="Remove" runat="server">
+
                             <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Remove" Font-Size="10px" />
                         </asp:LinkButton>
                     </ItemTemplate>
+                </asp:TemplateField>--%>
+
+                <asp:TemplateField HeaderText="Status" SortExpression="status" ItemStyle-CssClass="columns_label">
+                    <ItemTemplate>
+                        <%--<asp:Button ID="lbstat" runat="server" Text='<%# Eval("status") + " ▲"%>'></asp:Button>--%>
+
+                        <asp:Button Style="font-size: 10px; color: orangered; font-weight: bold; font-size: 10px" ID="btnUnsuspend" runat="server" Text='<%# Eval("acc_status") + " ▼"%>'
+                            CssClass="arrow-button" OnClick="Unsuspend_Click"
+                            OnClientClick="return confirm('Are you sure you want to Unsuspend this account manager?');"
+                            Visible='<%# Eval("acc_status").ToString() == "Suspend" %>' CommandArgument='<%# Eval("acc_id") %>' />
+                        <asp:Label ID="Label9" runat="server" Text='<%# Eval("acc_status")%>' Visible='<%# Eval("acc_status").ToString() == "Inactive" %>' CommandArgument='<%# Eval("acc_id") %>'></asp:Label>
+
+                        <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold; font-size: 10px" ID="btnSuspend" runat="server" Text='<%# Eval("acc_status") + " ▲"%>'
+                            CssClass="arrow-button ri-arrow-up-fill" OnClick="Suspend_Click"
+                            OnClientClick="return confirm('Are you sure you want to Suspend this account manager?');"
+                            Visible='<%# Eval("acc_status").ToString() == "Active" %>' CommandArgument='<%# Eval("acc_id") %>' />
+                    </ItemTemplate>
                 </asp:TemplateField>
+
+
+
+                <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="update" runat="server" OnClick="Update_Click" CommandArgument='<%# Eval("acc_id") %>'>
+                            <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
+                        </asp:LinkButton>
+                        <asp:LinkButton ID="Remove" runat="server" OnClick="Remove_Click" CommandArgument='<%# Eval("acc_id") %>' OnClientClick="return confirm('Are you sure you want to remove this account manager?');">
+                            <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Edit" Font-Size="10px" />
+                        </asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
             </Columns>
 
             <RowStyle BackColor="#052507" BorderStyle="Solid" BorderColor="#0a4d1d" />
@@ -506,99 +694,691 @@
 
 
 
-
       <asp:LinkButton ID="LinkButton1" runat="server"></asp:LinkButton>
-<asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-<asp:Panel ID="updatePanel" CssClass="card" runat="server" style="background-color: #052507; border: 1px solid aquamarine;">
-    <ContentTemplate>
-        <div class="card bg-light" style="background-color: #052507">
-            <div class="card-header" style="background-color: #052507; color: aquamarine;">
-                <h4>Update Admin Information</h4>
-            </div>
-            <div class="card-body" style="background-color: #052507">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">ID</span>
-                            </div>
-                            <asp:TextBox ID="txtbxID" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm" Enabled="false"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Firstname</span>
-                            </div>
-                            <asp:TextBox ID="txtbfirstname" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">M.I</span>
-                            </div>
-                            <asp:TextBox ID="txtmi" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Lastname</span>
-                            </div>
-                            <asp:TextBox ID="txtLastname" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></asp:TextBox>
-                        </div>
-                    </div>
+      <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Username</span>
-                            </div>
-                            <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Contact</span>
-                            </div>
-                            <asp:TextBox ID="txtContact" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
-                            </div>
-                            <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" ClientIDMode="Static" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></asp:TextBox>
-                        </div>
-                    </div>
+      <!-- Centering the panel and enhancing its look -->
+      <div class="container" style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+          <asp:Panel ID="updatePanel" CssClass="card shadow-lg scrollable-panel" runat="server" Style="max-width: 600px; background-color: #052507; border: 1px solid aquamarine; border-radius: 8px;">
+              <contenttemplate>
+                  <div class="card bg-light" style="background-color: #052507;">
+                      <!-- Header Section -->
+                      <div class="card-header text-center" style="background-color: #052507; color: aquamarine;">
+                          <h4 class="mb-0">Update Information</h4>
+                      </div>
 
-                </div>
-            </div>
-            <div class="card-footer" style="background-color: #052507; color: aquamarine;">
-                <asp:Button ID="btncancel" CssClass="btn btn-secondary" runat="server" Text="Cancel" />
-<%--                <asp:Button ID="btnUpdate" CssClass="btn btn-primary" runat="server" Text="Update" OnClick="UpdateAdminInfo" OnClientClick="return confirm('Are you sure you want to update category?');" />--%>
-                                <asp:Button ID="btnUpdate" CssClass="btn btn-primary" runat="server" Text="Update" />
+                      <!-- Body Section -->
+                      <div class="card-body" style="background-color: #052507;">
+                          <div class="row">
+                              <div class="col-12 mb-3">
+                                  <div class="input-group input-group-sm">
+                                  </div>
+                              </div>
+                              <!-- ID -->
+                              <div class="col-12 mb-3">
+                                  <div class="input-group input-group-sm">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">ID</span>
+                                      </div>
+                                      <asp:TextBox ID="txtbxID" runat="server" CssClass="form-control" ClientIDMode="Static" Enabled="false"></asp:TextBox>
+                                  </div>
+                              </div>
 
-            </div>
-        </div>
-    </ContentTemplate>
-</asp:Panel>
+                              <!-- Firstname -->
+                              <div class="col-6 mb-3">
+                                  <div class="input-group input-group-sm">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">Firstname</span>
+                                      </div>
+                                      <asp:TextBox ID="txtbfirstname" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:TextBox>
+                                      <br />
+                                      <span id="upd_firstnameError" class="text-danger"></span>
+                                  </div>
+                              </div>
+
+                              <!-- Lastname -->
+                              <div class="col-6 mb-3">
+                                  <div class="input-group input-group-sm">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">Lastname</span>
+                                      </div>
+                                      <asp:TextBox ID="txtLastname" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:TextBox>
+                                      <br />
+                                      <span id="upd_lastnameError" class="text-danger"></span>
+                                  </div>
+                              </div>
+
+                              <!-- Middle Initial -->
+                              <div class="col-6 mb-3">
+                                  <div class="input-group input-group-sm">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">M.I</span>
+                                      </div>
+                                      <asp:TextBox ID="txtmi" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:TextBox>
+                                  </div>
+                              </div>
+
+                              <!-- Contact -->
+                              <div class="col-6 mb-3">
+                                  <div class="input-group input-group-sm">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">Contact</span>
+                                      </div>
+                                      <asp:TextBox ID="txtContact" runat="server" CssClass="form-control" ClientIDMode="Static" textmode="Number"></asp:TextBox>
+                                      <br />
+                                      <span id="upd_contactError" class="text-danger"></span>
+                                  </div>
+                              </div>
+
+                              <!-- Email -->
+                              <div class="col-12 mb-3">
+                                  <div class="input-group input-group-sm">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">Email</span>
+                                      </div>
+                                      <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:TextBox>
+                                      <br />
+                                      <span id="upd_emailError" class="text-danger"></span>
+                                  </div>
+                              </div>
+
+                              <!-- Password -->
+                              <div class="col-12 mb-3">
+                                  <asp:Label ID="Label15" runat="server" Text="Password" Style="color: chartreuse"></asp:Label>
+                                  <div class="input-group">
+                                      <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control mt-2" type="password"></asp:TextBox>
+                                      <span class="input-group-text mt-2" style="cursor: pointer;" onclick="togglePassword()">
+                                          <i id="passwordIcon" class="fas fa-eye-slash"></i>
+                                      </span>
+                                  </div>
+                                  <br />
+                                  <span id="upd_passError" class="text-danger"></span>
+                              </div>
 
 
 
- <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender2" runat="server" CancelControlID="btncancel" PopupControlID="updatePanel" TargetControlID="LinkButton1" BackgroundCssClass="Background" DropShadow="True"></ajaxToolkit:ModalPopupExtender>
+                              <!-- Picture Upload -->
+                              <div class="col-12 mb-3">
+                                  <asp:Label ID="Label14" runat="server" Text="Picture" Style="color: chartreuse"></asp:Label>
+                                  <asp:FileUpload ID="FileUpload1" CssClass="form-control" runat="server" OnChange="previewImage();" />
+
+                                  <!-- Image preview, with a dynamic src attribute -->
+<%--                                  <img id="imagePreviewUpdate" src="Pictures/blank_prof.png" alt="Image Preview" class="img-thumbnail mt-2" style="max-width: 150px;" />--%>
+<%--                                  <asp:ImageMap ID="imagePreviewUpdate" runat="server" alt="Image Preview" class="img-thumbnail mt-2" style="max-width: 150px;""></asp:ImageMap>--%>
+                                  <asp:Image ID="imagePreviewUpdate" runat="server" AlternateText="Image Preview" CssClass="img-thumbnail mt-2" Style="max-width: 150px;" />
+
+                                  <span id="fileErrorUpdate" class="text-danger" style="display: none;">File uploaded is not an image.</span>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Footer Section -->
+                      <div class="card-footer text-center" style="background-color: #052507; color: aquamarine;">
+                          <asp:Button ID="btncancel" CssClass="btn btn-secondary" runat="server" Text="Cancel" />
+                          <asp:Button ID="btnUpdate" CssClass="btn btn-primary" runat="server" Text="Update" OnClick="UpdateAdminInfo" OnClientClick="return confirm('Are you sure you want to update category?');" />
+                      </div>
+                  </div>
+              </contenttemplate>
+          </asp:Panel>
+      </div>
+
+
+
+
+      <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender2" runat="server" CancelControlID="btncancel" PopupControlID="updatePanel" TargetControlID="LinkButton1" BackgroundCssClass="Background" DropShadow="True"></ajaxToolkit:ModalPopupExtender>
 
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <%--<script>
+          $(function () {
+              $("input[name='EmpId']").on('input', function (e) {
+                  $(this).val($(this).val().replace(/[^0-9]/g, ''));
+              });
+          });
+
+          // Function to validate the Firstname field
+          function validateFirstname() {
+              const firstname = document.getElementById('<%= emp_firstname.ClientID %>').value;
+              const errorSpan = document.getElementById('emp_firstnameError');
+              if (firstname === "") {
+                  errorSpan.textContent = "Firstname is required.";
+                  return false;
+              } else {
+                  errorSpan.textContent = "";
+                  return true;
+              }
+          }
+
+          // Function to validate the Lastname field
+          function validateLastname() {
+              const lastname = document.getElementById('<%=emp_lastname.ClientID%>').value;
+              const errorSpan = document.getElementById('emp_lastnameError');
+              if (lastname === "") {
+                  errorSpan.textContent = "Lastname is required.";
+                  return false;
+              } else {
+                  errorSpan.textContent = "";
+                  return true;
+              }
+          }
+
+
+          // Function to validate the Email field
+          function validateEmail() {
+              const email = document.getElementById('<%= emp_email.ClientID %>').value;
+              const errorSpan = document.getElementById('emp_emailError');
+              const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+              if (email === "") {
+                  errorSpan.textContent = "Email is required.";
+                  return false;
+              } else if (!emailRegex.test(email)) {
+                  errorSpan.textContent = "Please enter a valid email address.";
+                  return false;
+              } else {
+                  errorSpan.textContent = "";
+                  return true;
+              }
+          }
+
+          // Function to validate the Password field
+          function validatePassword() {
+              const password = document.getElementById('<%= emp_pass.ClientID %>').value;
+              const errorSpan = document.getElementById('emp_passError');
+              const passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+
+              if (password === "") {
+                  errorSpan.textContent = "Password is required.";
+                  return false;
+              } else if (!passRegex.test(password)) {
+                  errorSpan.textContent = "Password must be at least 6 characters long, contain one number, one uppercase, and one lowercase letter.";
+                  return false;
+              } else {
+                  errorSpan.textContent = "";
+                  return true;
+              }
+          }
+
+          // Function to validate the entire form
+          function validateForm() {
+              const isValidFirstname = validateFirstname();
+              const isValidLastname = validateLastname();
+              const isValidEmail = validateEmail();
+              const isValidPassword = validatePassword();
+              const isValidContact = validateContact();
+              const isValidRole = validateRole();
+
+              const submitButton = document.getElementById('<%= submitBtn.ClientID %>');
+
+              // Enable or disable the submit button based on validation results
+              if (isValidFirstname && isValidLastname && isValidEmail && isValidPassword && isValidContact && isValidRole) {
+                  submitButton.disabled = false;
+              } else {
+                  submitButton.disabled = true;
+              }
+          }
+
+
+          // Function to validate the Contact number field
+          function validateContact() {
+              const contact = document.getElementById('<%= emp_contact.ClientID %>').value;
+              const errorSpan = document.getElementById('emp_contactError');
+              const contactRegex = /^(\+63|0)\d{10}$/;
+
+              if (contact === "") {
+                  errorSpan.textContent = "Contact number is required.";
+                  return false;
+              } else if (!contactRegex.test(contact)) {
+                  errorSpan.textContent = "Please enter a valid contact number (e.g., 09123456789 or +639123456789).";
+                  return false;
+              } else {
+                  errorSpan.textContent = "";
+                  return true;
+              }
+          }
+
+
+          // Function to validate the Role field
+          function validateRole() {
+              const role = document.getElementById('<%= emp_role.ClientID %>').value;
+              const errorSpan = document.getElementById('emp_roleError');
+
+              if (role === "<--Select Role-->") {
+                  errorSpan.textContent = "Role is required.";
+                  return false;
+              } else {
+                  errorSpan.textContent = "";
+                  return true;
+              }
+          }
+
+          function previewImage() {
+              const fileInput = document.getElementById('<%=formFile.ClientID %>');
+              const file = fileInput.files[0];
+              const preview = document.getElementById('imagePreview');
+              const error = document.getElementById('fileError');
+
+              // Reset error and image preview
+              error.style.display = 'none';
+              preview.src = 'Pictures/blank_prof.png'; // default image
+
+              if (file) {
+                  const fileType = file.type;
+                  const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+
+                  if (validImageTypes.includes(fileType)) {
+                      const reader = new FileReader();
+                      reader.onload = function (e) {
+                          preview.src = e.target.result;  // Set the preview image to the file chosen
+                      }
+                      reader.readAsDataURL(file); // Read the file as a data URL
+                  } else {
+                      // Display error if file is not an image
+                      error.style.display = 'block';
+                  }
+              }
+          }
+
+          // Attach event listeners to validate on keyup or change
+          document.getElementById('<%= emp_firstname.ClientID %>').addEventListener('keyup', validateForm);
+          document.getElementById('<%= emp_lastname.ClientID %>').addEventListener('keyup', validateForm);
+          document.getElementById('<%= emp_email.ClientID %>').addEventListener('keyup', validateForm);
+          document.getElementById('<%= emp_pass.ClientID %>').addEventListener('keyup', validateForm);
+          document.getElementById('<%= emp_contact.ClientID %>').addEventListener('keyup', validateForm);
+          document.getElementById('<%= emp_role.ClientID %>').addEventListener('change', validateForm);
+
+
+      </script>--%>
+
+
+
+      <%--WORKING CODES NAJUD NI--%>
+<%--2nd WORKING FOR SCRIPTS--%>
 <script>
     $(function () {
         $("input[name='EmpId']").on('input', function (e) {
             $(this).val($(this).val().replace(/[^0-9]/g, ''));
         });
     });
+
+    function togglePasswords() {
+        const passwordInput = document.getElementById('<%= emp_pass.ClientID %>');
+        const passIcon = document.getElementById('passIcon');
+
+        console.log(passwordInput);  // This will help check if passwordInput is correctly selected.
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passIcon.classList.remove('fa-eye-slash');
+            passIcon.classList.add('fa-eye');
+        } else {
+            passwordInput.type = "password";
+            passIcon.classList.remove('fa-eye');
+            passIcon.classList.add('fa-eye-slash');
+        }
+    }
+
+
+
+
+    // Function to validate the Firstname field
+    function validateFirstname() {
+        const firstname = document.getElementById('<%= emp_firstname.ClientID %>').value;
+        const errorSpan = document.getElementById('emp_firstnameError');
+        if (firstname === "") {
+            errorSpan.textContent = "Firstname is required.";
+            return false;
+        } else {
+            errorSpan.textContent = "";
+            return true;
+        }
+    }
+
+    // Function to validate the Lastname field
+    function validateLastname() {
+        const lastname = document.getElementById('<%=emp_lastname.ClientID%>').value;
+        const errorSpan = document.getElementById('emp_lastnameError');
+        if (lastname === "") {
+            errorSpan.textContent = "Lastname is required.";
+            return false;
+        } else {
+            errorSpan.textContent = "";
+            return true;
+        }
+    }
+
+    // Function to validate the Email field
+    function validateEmail() {
+        const email = document.getElementById('<%= emp_email.ClientID %>').value;
+        const errorSpan = document.getElementById('emp_emailError');
+        const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+        if (email === "") {
+            errorSpan.textContent = "Email is required.";
+            return false;
+        } else if (!emailRegex.test(email)) {
+            errorSpan.textContent = "Please enter a valid email address.";
+            return false;
+        } else {
+            errorSpan.textContent = "";
+            return true;
+        }
+    }
+
+    // Function to validate the Password field
+    function validatePassword() {
+        const password = document.getElementById('<%= emp_pass.ClientID %>').value;
+        const errorSpan = document.getElementById('emp_passError');
+        const passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+
+        if (password === "") {
+            errorSpan.textContent = "Password is required.";
+            return false;
+        } else if (!passRegex.test(password)) {
+            errorSpan.textContent = "Password must be at least 6 characters long, contain one number, one uppercase, and one lowercase letter.";
+            return false;
+        } else {
+            errorSpan.textContent = "";
+            return true;
+        }
+    }
+
+    // Function to validate the Contact number field
+    function validateContact() {
+        const contact = document.getElementById('<%= emp_contact.ClientID %>').value;
+        const errorSpan = document.getElementById('emp_contactError');
+        const contactRegex = /^(\+63|0)\d{10}$/;
+
+        if (contact === "") {
+            errorSpan.textContent = "Contact number is required.";
+            return false;
+        } else if (!contactRegex.test(contact)) {
+            errorSpan.textContent = "Please enter a valid contact number (e.g., 09123456789 or +639123456789).";
+            return false;
+        } else {
+            errorSpan.textContent = "";
+            return true;
+        }
+    }
+
+    // Function to validate the Role field
+    function validateRole() {
+        const role = document.getElementById('<%= emp_role.ClientID %>').value;
+        const errorSpan = document.getElementById('emp_roleError');
+
+        if (role === "<--Select Role-->") {
+            errorSpan.textContent = "Role is required.";
+            return false;
+        } else {
+            errorSpan.textContent = "";
+            return true;
+        }
+    }
+
+    // Function to validate the entire form
+    function validateForm() {
+        const isValidFirstname = validateFirstname();
+        const isValidLastname = validateLastname();
+        const isValidEmail = validateEmail();
+        const isValidPassword = validatePassword();
+        const isValidContact = validateContact();
+        const isValidRole = validateRole();
+
+        const submitButton = document.getElementById('<%= submitBtn.ClientID %>');
+
+        // Enable or disable the submit button based on validation results
+        if (isValidFirstname && isValidLastname && isValidEmail && isValidPassword && isValidContact && isValidRole) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+
+        // Display SweetAlert errors for missing fields
+        //if (!isValidFirstname) {
+        //    Swal.fire('Validation Error', 'Please enter your first name.', 'error');
+        //}
+        //if (!isValidLastname) {
+        //    Swal.fire('Validation Error', 'Please enter your last name.', 'error');
+        //}
+        //if (!isValidEmail) {
+        //    Swal.fire('Validation Error', 'Please enter a valid email address.', 'error');
+        //}
+        //if (!isValidContact) {
+        //    Swal.fire('Validation Error', 'Please enter your contact number.', 'error');
+        //}
+        //if (!isValidPassword) {
+        //    Swal.fire('Validation Error', 'Please enter a valid password.', 'error');
+        //}
+        //if (!isValidRole) {
+        //    Swal.fire('Validation Error', 'Please select a role.', 'error');
+        //}
+
+        return isValidFirstname && isValidLastname && isValidEmail && isValidPassword && isValidContact && isValidRole;
+    }
+
+
+    //
+    function previewImage() {
+        var fileInput = document.getElementById('<%= FileUpload1.ClientID %>');
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var imagePreview = document.getElementById('<%= imagePreviewUpdate.ClientID %>');
+            imagePreview.src = e.target.result;
+        };
+
+        if (file && file.type.startsWith("image/")) {
+            reader.readAsDataURL(file);
+            document.getElementById('fileErrorUpdate').style.display = "none";
+        } else {
+            document.getElementById('fileErrorUpdate').style.display = "block";
+            document.getElementById('<%= imagePreviewUpdate.ClientID %>').src = "~/Pictures/blank_prof.png";
+        }
+    }
+
+    function previewImage1() {
+        var fileInput = document.getElementById('<%= formFile.ClientID %>');
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var imagePreview = document.getElementById('<%= imagePreview.ClientID %>');
+            imagePreview.src = e.target.result;
+        };
+
+        if (file && file.type.startsWith("image/")) {
+            reader.readAsDataURL(file);
+            document.getElementById('fileErrorUpdate').style.display = "none";
+        } else {
+            document.getElementById('fileErrorUpdate').style.display = "block";
+            document.getElementById('<%= imagePreview.ClientID %>').src = "~/Pictures/blank_prof.png";
+        }
+    }
+
+
+    // Attach event listeners to validate on keyup or change
+    document.getElementById('<%= emp_firstname.ClientID %>').addEventListener('keyup', validateForm);
+    document.getElementById('<%= emp_lastname.ClientID %>').addEventListener('keyup', validateForm);
+    document.getElementById('<%= emp_email.ClientID %>').addEventListener('keyup', validateForm);
+    document.getElementById('<%= emp_pass.ClientID %>').addEventListener('keyup', validateForm);
+    document.getElementById('<%= emp_contact.ClientID %>').addEventListener('keyup', validateForm);
+    document.getElementById('<%= emp_role.ClientID %>').addEventListener('change', validateForm);
+
 </script>
+
+
+
+
+
+
+<script>
+    $(function () {
+        $("input[name='EmpId']").on('input', function () {
+            $(this).val($(this).val().replace(/[^0-9]/g, ''));
+        });
+
+        window.togglePassword = function () {
+            var passwordField = document.getElementById('<%= TextBox1.ClientID %>');
+            var icon = document.getElementById('passwordIcon');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
+
+
+
+        // Function to validate the Firstname field
+        function validateFirstname() {
+            const firstname = document.getElementById('<%= txtbfirstname.ClientID %>').value;
+            const errorSpan = document.getElementById('upd_firstnameError');
+            if (firstname === "") {
+                errorSpan.textContent = "Firstname is required.";
+                return false;
+            } else {
+                errorSpan.textContent = "";
+                return true;
+            }
+        }
+
+        // Function to validate the Lastname field
+        function validateLastname() {
+            const lastname = document.getElementById('<%= txtLastname.ClientID %>').value;
+            const errorSpan = document.getElementById('upd_lastnameError');
+            if (lastname === "") {
+                errorSpan.textContent = "Lastname is required.";
+                return false;
+            } else {
+                errorSpan.textContent = "";
+                return true;
+            }
+        }
+
+        // Function to validate the Email field
+        function validateEmail() {
+            const email = document.getElementById('<%= txtEmail.ClientID %>').value;
+            const errorSpan = document.getElementById('upd_emailError');
+            const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+            if (email === "") {
+                errorSpan.textContent = "Email is required.";
+                return false;
+            } else if (!emailRegex.test(email)) {
+                errorSpan.textContent = "Please enter a valid email address.";
+                return false;
+            } else {
+                errorSpan.textContent = "";
+                return true;
+            }
+        }
+
+        // Function to validate the Contact number field
+        function validateContact() {
+            const contact = document.getElementById('<%= txtContact.ClientID %>').value;
+            const errorSpan = document.getElementById('upd_contactError');
+            const contactRegex = /^(\+63|0)\d{10}$/;
+
+            if (contact === "") {
+                errorSpan.textContent = "Contact number is required.";
+                return false;
+            } else if (!contactRegex.test(contact)) {
+                errorSpan.textContent = "Please enter a valid contact number (e.g., 09123456789 or +639123456789).";
+                return false;
+            } else {
+                errorSpan.textContent = "";
+                return true;
+            }
+        }
+
+        // Function to validate the Password field
+        function validatePassword() {
+            const password = document.getElementById('<%= TextBox1.ClientID %>').value;
+            const errorSpan = document.getElementById('upd_passError');
+            const passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+
+            //if (password === "") {
+            //    errorSpan.textContent = "Password is required.";
+            //    return false;
+            //} else if (!passRegex.test(password)) {
+            //    errorSpan.textContent = "Password must be at least 6 characters long, contain one number, one uppercase, and one lowercase letter.";
+            //    return false;
+            //} else {
+            //    errorSpan.textContent = "";
+            //    return true;
+            //}
+            if (password === "") {
+                errorSpan.textContent = "";
+                return true;
+            } else if (!passRegex.test(password)) {
+                errorSpan.textContent = "Password must be at least 6 characters long, contain one number, one uppercase, and one lowercase letter.";
+                return false;
+            } else {
+                errorSpan.textContent = "";
+                return true;
+            }
+        }
+
+        // Function to validate the Picture Upload field
+        function validatePictureUpload() {
+            const fileInput = document.getElementById('<%= FileUpload1.ClientID %>');
+            const file = fileInput.files[0];
+            const errorSpan = document.getElementById('fileErrorUpdate');
+
+            // Reset error
+            errorSpan.style.display = 'none';
+
+            if (file) {
+                const fileType = file.type;
+                const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+
+                if (!validImageTypes.includes(fileType)) {
+                    errorSpan.style.display = 'block';
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        // Attach event listeners to validate on keyup or change
+        document.getElementById('<%= txtbfirstname.ClientID %>').addEventListener('keyup', validateFirstname);
+        document.getElementById('<%= txtLastname.ClientID %>').addEventListener('keyup', validateLastname);
+        document.getElementById('<%= txtEmail.ClientID %>').addEventListener('keyup', validateEmail);
+        document.getElementById('<%= TextBox1.ClientID %>').addEventListener('keyup', validatePassword);
+        document.getElementById('<%= txtContact.ClientID %>').addEventListener('keyup', validateContact);
+        document.getElementById('<%= FileUpload1.ClientID %>').addEventListener('change', function () {
+            previewImage();
+            validatePictureUpload();
+        document.getElementById('<%= formFile.ClientID %>').addEventListener('change', function () {
+                previewImage();
+                validatePictureUpload();
+            });
+
+            // Form validation on submit
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const isValidFirstname = validateFirstname();
+                const isValidLastname = validateLastname();
+                const isValidEmail = validateEmail();
+                const isValidPassword = validatePassword();
+                const isValidContact = validateContact();
+                const isValidPicture = validatePictureUpload();
+
+                if (!isValidFirstname || !isValidLastname || !isValidEmail || !isValidPassword || !isValidContact || !isValidPicture) {
+                    e.preventDefault(); // Prevent form submission if validation fails
+                }
+            });
+        });
+</script>
+
+      
+
+
+
 
 
 <style>
