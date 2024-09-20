@@ -467,7 +467,7 @@
 
                       <div class="mb-3">
                           <asp:Label ID="Label8" runat="server" Text="Contact No." for="inputText" Style="color: chartreuse"></asp:Label>
-                          <asp:TextBox ID="emp_contact" runat="server" class="form-control" Style="margin-top: 10px" onkeyup="validateContact()"></asp:TextBox>
+                          <asp:TextBox ID="emp_contact" runat="server" TextMode="Number" class="form-control"  Style="margin-top: 10px" onkeyup="validateContact()"></asp:TextBox>
                           <span id="emp_contactError" class="text-danger"></span>
                       </div>
                       <div class="mb-3">
@@ -1213,10 +1213,12 @@
 
 <script>
     $(function () {
+        // Restrict EmpId to only numbers
         $("input[name='EmpId']").on('input', function () {
             $(this).val($(this).val().replace(/[^0-9]/g, ''));
         });
 
+        // Toggle password visibility
         window.togglePassword = function () {
             var passwordField = document.getElementById('<%= TextBox1.ClientID %>');
             var icon = document.getElementById('passwordIcon');
@@ -1229,9 +1231,7 @@
                 icon.classList.remove("fa-eye");
                 icon.classList.add("fa-eye-slash");
             }
-        }
-
-
+        };
 
         // Function to validate the Firstname field
         function validateFirstname() {
@@ -1301,18 +1301,8 @@
             const errorSpan = document.getElementById('upd_passError');
             const passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
 
-            //if (password === "") {
-            //    errorSpan.textContent = "Password is required.";
-            //    return false;
-            //} else if (!passRegex.test(password)) {
-            //    errorSpan.textContent = "Password must be at least 6 characters long, contain one number, one uppercase, and one lowercase letter.";
-            //    return false;
-            //} else {
-            //    errorSpan.textContent = "";
-            //    return true;
-            //}
             if (password === "") {
-                errorSpan.textContent = "";
+                errorSpan.textContent = ""; // Optional field if empty
                 return true;
             } else if (!passRegex.test(password)) {
                 errorSpan.textContent = "Password must be at least 6 characters long, contain one number, one uppercase, and one lowercase letter.";
@@ -1326,56 +1316,58 @@
         // Function to validate the Picture Upload field
         function validatePictureUpload() {
             const fileInput = document.getElementById('<%= FileUpload1.ClientID %>');
-            const file = fileInput.files[0];
-            const errorSpan = document.getElementById('fileErrorUpdate');
+        const file = fileInput.files[0];
+        const errorSpan = document.getElementById('fileErrorUpdate');
 
-            // Reset error
-            errorSpan.style.display = 'none';
+        // Reset error
+        errorSpan.style.display = 'none';
 
-            if (file) {
-                const fileType = file.type;
-                const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+        if (file) {
+            const fileType = file.type;
+            const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
 
-                if (!validImageTypes.includes(fileType)) {
-                    errorSpan.style.display = 'block';
-                    return false;
-                }
+            if (!validImageTypes.includes(fileType)) {
+                errorSpan.style.display = 'block';
+                return false;
             }
-            return true;
         }
+        return true;
+    }
 
+    // Attach event listeners to validate on keyup or change
+    document.getElementById('<%= txtbfirstname.ClientID %>').addEventListener('keyup', validateFirstname);
+    document.getElementById('<%= txtLastname.ClientID %>').addEventListener('keyup', validateLastname);
+    document.getElementById('<%= txtEmail.ClientID %>').addEventListener('keyup', validateEmail);
+    document.getElementById('<%= TextBox1.ClientID %>').addEventListener('keyup', validatePassword);
+    document.getElementById('<%= txtContact.ClientID %>').addEventListener('keyup', validateContact);
 
-        // Attach event listeners to validate on keyup or change
-        document.getElementById('<%= txtbfirstname.ClientID %>').addEventListener('keyup', validateFirstname);
-        document.getElementById('<%= txtLastname.ClientID %>').addEventListener('keyup', validateLastname);
-        document.getElementById('<%= txtEmail.ClientID %>').addEventListener('keyup', validateEmail);
-        document.getElementById('<%= TextBox1.ClientID %>').addEventListener('keyup', validatePassword);
-        document.getElementById('<%= txtContact.ClientID %>').addEventListener('keyup', validateContact);
-        document.getElementById('<%= FileUpload1.ClientID %>').addEventListener('change', function () {
-            previewImage();
-            validatePictureUpload();
+    // Attach change event listeners for image preview and validation
+    document.getElementById('<%= FileUpload1.ClientID %>').addEventListener('change', function () {
+        previewImage(); // Assuming previewImage() is defined elsewhere
+        validatePictureUpload();
+    });
+
         document.getElementById('<%= formFile.ClientID %>').addEventListener('change', function () {
-                previewImage();
-                validatePictureUpload();
-            });
-
-            // Form validation on submit
-            document.querySelector('form').addEventListener('submit', function (e) {
-                const isValidFirstname = validateFirstname();
-                const isValidLastname = validateLastname();
-                const isValidEmail = validateEmail();
-                const isValidPassword = validatePassword();
-                const isValidContact = validateContact();
-                const isValidPicture = validatePictureUpload();
-
-                if (!isValidFirstname || !isValidLastname || !isValidEmail || !isValidPassword || !isValidContact || !isValidPicture) {
-                    e.preventDefault(); // Prevent form submission if validation fails
-                }
-            });
+            previewImage(); // Assuming previewImage() is defined elsewhere
+            validatePictureUpload();
         });
-</script>
 
-      
+        // Form validation on submit
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const isValidFirstname = validateFirstname();
+            const isValidLastname = validateLastname();
+            const isValidEmail = validateEmail();
+            const isValidPassword = validatePassword();
+            const isValidContact = validateContact();
+            const isValidPicture = validatePictureUpload();
+
+            if (!isValidFirstname || !isValidLastname || !isValidEmail || !isValidPassword || !isValidContact || !isValidPicture) {
+                e.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    });
+
+</script>
 
 
 
