@@ -206,6 +206,7 @@
     <Content Include="BO_Dashboard.aspx" />
     <Content Include="mongocrypt.dll" />
     <Content Include="SAM_AccountSettings.aspx" />
+    <Content Include="SAM_BO.aspx" />
     <Content Include="SAM_Dashboard.aspx" />
     <Content Include="SAM_AccountMan.aspx" />
     <Content Include="assets\css\style.css" />
@@ -2236,6 +2237,13 @@
     </Compile>
     <Compile Include="SAM_AccountSettings.aspx.designer.cs">
       <DependentUpon>SAM_AccountSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SAM_BO.aspx.cs">
+      <DependentUpon>SAM_BO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SAM_BO.aspx.designer.cs">
+      <DependentUpon>SAM_BO.aspx</DependentUpon>
     </Compile>
     <Compile Include="SAM_Dashboard.aspx.cs">
       <DependentUpon>SAM_Dashboard.aspx</DependentUpon>

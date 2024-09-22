@@ -1,5 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SAM_AccountMan.aspx.cs" Inherits="Capstone.Account_Manager_ManageAccount" %>
-<%--<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>--%>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SAM_BO.aspx.cs" Inherits="Capstone.SAM_BO" %>
 
 <!DOCTYPE html>
 
@@ -335,7 +334,7 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
             <li>
-                <a href="SAM_AccountMan.aspx" class="active">
+                <a href="SAM_AccountMan.aspx">
                     <i class="bi bi-circle"></i><span>Account Manager</span>
                 </a>
             </li>
@@ -352,7 +351,7 @@
             </li>
 
             <li>
-                <a href="SAM_BO.aspx">
+                <a href="SAM_BO.aspx" class="active">
                     <i class="bi bi-circle"></i><span>Billing Officer</span>
                 </a>
             </li>
@@ -1546,4 +1545,3 @@
         
     </form>
 </html>
-

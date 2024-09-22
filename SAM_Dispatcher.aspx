@@ -277,7 +277,7 @@
             </li>
 
             <li>
-                <a href="WAREHOUSE_ADD_CATEGORY.aspx">
+                <a href="SAM_BO.aspx">
                     <i class="bi bi-circle"></i><span>Billing Officer</span>
                 </a>
             </li>
