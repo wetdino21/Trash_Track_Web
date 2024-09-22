@@ -30,8 +30,102 @@ namespace Capstone
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                //AccountManList();
+                //profile_image.DataBind();
+                LoadProfile();
+            }
         }
+        private void LoadProfile()
+        {
+            //imagePreview.
+
+            try
+            {
+                if (Session["sam_id"] == null)
+                {
+                    // Session expired or not set, redirect to login
+                    Response.Redirect("LoginPage.aspx");
+                    return;
+                }
+
+                int adminId = (int)Session["sam_id"];  // Retrieve admin ID from session
+
+                byte[] imageData = null;  // Initialize imageData
+
+                // Define the PostgreSQL connection
+                using (var db = new NpgsqlConnection(con))
+                {
+                    db.Open();
+
+                    // PostgreSQL query to get profile image
+                    string query = "SELECT acc_profile FROM account_manager WHERE acc_id = @id";
+                    using (var cmd = new NpgsqlCommand(query, db))
+                    {
+                        // Set the parameter for admin ID
+                        cmd.Parameters.AddWithValue("@id", NpgsqlTypes.NpgsqlDbType.Integer, adminId);
+
+                        // Execute the query and retrieve the image data
+                        var result = cmd.ExecuteScalar();
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            imageData = (byte[])result;  // Cast the result to byte array
+                        }
+                    }
+                }
+
+                // Check if the profile_image control exists and is not null
+                if (profile_image != null)
+                {
+                    if (imageData != null && imageData.Length > 0)
+                    {
+                        string base64String = Convert.ToBase64String(imageData);
+                        profile_image.ImageUrl = "data:image/jpeg;base64," + base64String;  // Set image as base64 string
+                        //imagePreviewUpdate.ImageUrl = "data:image/jpeg;base64," + base64String;
+                    }
+                    else
+                    {
+                        profile_image.ImageUrl = "~/Pictures/blank_prof.png";  // Default image if no profile picture found
+                    }
+                }
+                else
+                {
+                    Response.Write("<script>alert('Profile image control is not found');</script>");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it
+                Response.Write("<script>alert('Error loading profile image: " + ex.Message + "');</script>");
+                profile_image.ImageUrl = "~/Pictures/blank_prof.png";  // Fallback in case of an error
+            }
+        }
+
+        //protected void AccountManList()
+        //{
+        //    using (var db = new NpgsqlConnection(con))
+        //    {
+        //        db.Open();
+        //        using (var cmd = db.CreateCommand())
+        //        {
+        //            cmd.CommandType = CommandType.Text;
+        //            // Modified the query to match the column names in the account_manager table
+        //            cmd.CommandText = "SELECT * FROM account_manager WHERE acc_status != 'Deleted' AND acc_id != @id ORDER BY acc_id, acc_status";
+        //            cmd.Parameters.AddWithValue("@id", Convert.ToInt32(Session["id"]));
+
+        //            DataTable admin_datatable = new DataTable();
+        //            NpgsqlDataAdapter admin_sda = new NpgsqlDataAdapter(cmd);
+        //            admin_sda.Fill(admin_datatable);
+
+        //            gridViewAccountMan.DataSource = admin_datatable; ;
+        //            gridViewAccountMan.DataBind();
+        //        }
+
+        //        db.Close();
+        //    }
+        //}
 
 
         private string HashPassword(string password)

@@ -39,6 +39,38 @@
   <link href="assets/css/style.css" rel="stylesheet">
     <%--#052507--%>
     <style>
+        .table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.thead-dark {
+    background-color: #343a40; /* Dark header background */
+    color: #ffffff; /* White text for header */
+}
+
+.table-row {
+    background-color: white; /* White background for normal rows */
+    color: black; /* Black text */
+}
+
+.table-row-striped {
+    background-color: #f9cfb4; /* Light color for alternating rows */
+    color: black; /* Black text */
+}
+
+.column {
+    padding: 10px; /* Padding for columns */
+    word-wrap: break-word; /* Allows long text to wrap within the cell */
+}
+
+/* Optional: Add hover effect */
+.table-row:hover {
+    background-color: #e0e0e0; /* Light grey on hover */
+}
+
+
+
     /*Panel scrollable height*/
     /*.scrollable-panel {
         max-height: 95vh;*/ /* Adjust this value as needed */
@@ -513,180 +545,184 @@
 
           <%--ADD BUTTON--%>
           <div class="gridview-container">
-    <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridView1" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True"
-        DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" Font-Size="10px" ForeColor="#333333" GridLines="None">
+                            <table class="table datatable">
+ 
+              <thead>
+<tr style="background-color: #2c2c2c; color: Chartreuse;">
+            <th style="padding: 10px; text-align: left;">ID</th>
+            <th style="padding: 10px; text-align: left;">First Name</th>
+            <th style="padding: 10px; text-align: left;">M.I</th>
+            <th style="padding: 10px; text-align: left;">Last Name</th>
+            <th style="padding: 10px; text-align: left;">Contact</th>
+            <th style="padding: 10px; text-align: left;">Email</th>
+            <th style="padding: 10px; text-align: left;">Created At</th>
+            <th style="padding: 10px; text-align: left;">Updated At</th>
+            <th style="padding: 10px; text-align: left;">Status</th>
+            <th style="padding: 10px; text-align: left;">Action</th>
+        </tr>
+                  </thead>
+                                </table>
+    <asp:GridView ID="gridViewAccountMan" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" CssClass="table datatable"
+        DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" GridLines="None" Style="width: 100%; word-break: break-all; table-layout: fixed">
         
-        <AlternatingRowStyle BackColor="#e8f7e4" />
-
+        <HeaderStyle BackColor="#2c2c2c" Font-Bold="True" ForeColor="Chartreuse" Font-Size="14px" />
+        <RowStyle BackColor="White" ForeColor="Black" />
+        <AlternatingRowStyle BackColor="#f9cfb4" ForeColor="Black" />
+        
         <Columns>
             <asp:BoundField DataField="acc_id" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="acc_id" ItemStyle-Width="100px">
-                <ItemStyle Width="100px"></ItemStyle>
+                <ItemStyle Width="100px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_fname" HeaderText="First Name" SortExpression="acc_fname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_fname" HeaderText="First Name" SortExpression="acc_fname" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_mname" HeaderText="M.I" SortExpression="acc_mname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_mname" HeaderText="M.I" SortExpression="acc_mname" ItemStyle-Width="100px">
+                <ItemStyle Width="100px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_lname" HeaderText="Last Name" SortExpression="acc_lname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_lname" HeaderText="Last Name" SortExpression="acc_lname" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-Width="100px">
+                <ItemStyle Width="100px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-Width="200px">
+                <ItemStyle Width="200px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
             </asp:BoundField>
-            <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-            <asp:BoundField DataField="acc_status" HeaderText="Status" SortExpression="acc_status" ItemStyle-CssClass="columns_label">
-                <ItemStyle Width="100px"></ItemStyle>
+            <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
             </asp:BoundField>
 
-            <asp:TemplateField HeaderText="Status" SortExpression="status" ItemStyle-CssClass="columns_label">
+            <asp:TemplateField HeaderText="Status">
                 <ItemTemplate>
                     <asp:Button Style="font-size: 10px; color: orangered; font-weight: bold;" ID="btnUnsuspend" runat="server" Text='<%# Eval("acc_status") + " ▼"%>'
-                        CssClass="arrow-button" OnClick="Unsuspend_Click"
-                        OnClientClick="return confirm('Are you sure you want to Unsuspend this admin?');"
+                        OnClick="Unsuspend_Click"
+                        OnClientClick="return confirm('Are you sure you want to Unsuspend this account manager?');"
                         Visible='<%# Eval("acc_status").ToString() == "Suspend" %>' CommandArgument='<%# Eval("acc_id") %>' />
-
-
-                    <asp:Label ID="Label11" ForeColor="White" runat="server"
-                        Text='<%# Eval("acc_status") + " ▼"%>'
-                        Visible='<%# Eval("acc_status").ToString() != "Suspend" && Eval("acc_status").ToString() != "Active" %>'
-                        CommandArgument='<%# Eval("acc_id") %>'></asp:Label>
-
-
+                    <asp:Label ID="Label9" runat="server" Text='<%# Eval("acc_status")%>' Visible='<%# Eval("acc_status").ToString() == "Inactive" %>' />
                     <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold;" ID="btnSuspend" runat="server" Text='<%# Eval("acc_status") + " ▲"%>'
-                        CssClass="arrow-button ri-arrow-up-fill" OnClick="Suspend_Click"
-                        OnClientClick="return confirm('Are you sure you want to Suspend this admin?');"
+                        OnClick="Suspend_Click"
+                        OnClientClick="return confirm('Are you sure you want to Suspend this account manager?');"
                         Visible='<%# Eval("acc_status").ToString() == "Active" %>' CommandArgument='<%# Eval("acc_id") %>' />
                 </ItemTemplate>
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
+            <asp:TemplateField HeaderText="Action">
                 <ItemTemplate>
                     <asp:LinkButton ID="update" runat="server" OnClick="Update_Click" CommandArgument='<%# Eval("acc_id") %>'>
-                        <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
+                        <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" />
                     </asp:LinkButton>
                     <asp:LinkButton ID="Remove" runat="server" OnClick="Remove_Click" CommandArgument='<%# Eval("acc_id") %>' OnClientClick="return confirm('Are you sure you want to remove this account manager?');">
-                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Edit" Font-Size="10px" />
+                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Remove" />
                     </asp:LinkButton>
                 </ItemTemplate>
             </asp:TemplateField>
-
         </Columns>
 
-        <RowStyle BackColor="#ffffff" BorderStyle="Solid" BorderColor="#90ee90" />
-        
-        <HeaderStyle BackColor="#90ee90" Font-Bold="True" ForeColor="#333333" BorderStyle="None" />
-        
-        <FooterStyle BackColor="#90ee90" Font-Bold="True" ForeColor="#333333" />
-
-        <SelectedRowStyle BackColor="#ccffcc" Font-Bold="True" ForeColor="#333333" />
-
-        <PagerStyle BorderColor="#90ee90" Font-Size="12px" BackColor="White" ForeColor="#333333" HorizontalAlign="Center" />
-
-        <SortedAscendingHeaderStyle BackColor="#c0e8c0" />
-        <SortedDescendingHeaderStyle BackColor="#a8d8a8" />
+        <FooterStyle BackColor="Black" Font-Bold="True" ForeColor="#f9cfb4" />
+        <PagerStyle BorderColor="#CC9900" Font-Size="20px" BackColor="White" ForeColor="#f9cfb4" HorizontalAlign="Center" />
+        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="White" />
     </asp:GridView>
 </div>
 
 
+
     <%--EDIT BUTTON--%>
-    <div class="gridview-container">
-        <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridViewAccountMan" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True"
-            DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" Font-Size="10px" ForeColor="White" GridLines="None">
-            <AlternatingRowStyle BackColor="#041d06" />
+    <%--<div class="gridview-container">
+    <asp:GridView Style="width: 100%; word-break: break-all; table-layout: fixed" ID="gridViewAccountMan" runat="server" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" 
+        DataKeyNames="acc_id" AllowPaging="False" CellPadding="20" GridLines="None">
+        <AlternatingRowStyle BackColor="#f9cfb4" ForeColor="Black" />
 
-            <Columns>
-                <asp:BoundField DataField="acc_id" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="acc_id" ItemStyle-Width="100px">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_fname" HeaderText="First Name" SortExpression="acc_fname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_mname" HeaderText="M.I" SortExpression="acc_mname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_lname" HeaderText="Last Name" SortExpression="acc_lname" ItemStyle-Width="100px" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>
-                <%--<asp:BoundField DataField="acc_status" HeaderText="Status" SortExpression="acc_status" ItemStyle-CssClass="columns_label">
-                    <ItemStyle Width="100px"></ItemStyle>
-                </asp:BoundField>--%>
-                <%--<asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="update" runat="server">
-                            <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
-                        </asp:LinkButton>
-                        <asp:LinkButton ID="Remove" runat="server">
+        <Columns>
+            <asp:BoundField DataField="acc_id" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="acc_id" ItemStyle-Width="100px">
+                <ItemStyle Width="100px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_fname" HeaderText="First Name" SortExpression="acc_fname" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_mname" HeaderText="M.I" SortExpression="acc_mname" ItemStyle-Width="100px">
+                <ItemStyle Width="100px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_lname" HeaderText="Last Name" SortExpression="acc_lname" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-Width="100px">
+                <ItemStyle Width="100px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-Width="200px">
+                <ItemStyle Width="200px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
+            </asp:BoundField>
+            <asp:BoundField DataField="acc_updated_at" HeaderText="Updated At" SortExpression="acc_updated_at" ItemStyle-Width="150px">
+                <ItemStyle Width="150px" Wrap="true" />
+            </asp:BoundField>
+            
+            <asp:TemplateField HeaderText="Status">
+                <ItemTemplate>
+                    <asp:Button Style="font-size: 10px; color: orangered; font-weight: bold;" ID="btnUnsuspend" runat="server" Text='<%# Eval("acc_status") + " ▼"%>'
+                        OnClick="Unsuspend_Click"
+                        OnClientClick="return confirm('Are you sure you want to Unsuspend this account manager?');"
+                        Visible='<%# Eval("acc_status").ToString() == "Suspend" %>' CommandArgument='<%# Eval("acc_id") %>' />
+                    <asp:Label ID="Label9" runat="server" Text='<%# Eval("acc_status")%>' Visible='<%# Eval("acc_status").ToString() == "Inactive" %>' />
+                    <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold;" ID="btnSuspend" runat="server" Text='<%# Eval("acc_status") + " ▲"%>'
+                        OnClick="Suspend_Click"
+                        OnClientClick="return confirm('Are you sure you want to Suspend this account manager?');"
+                        Visible='<%# Eval("acc_status").ToString() == "Active" %>' CommandArgument='<%# Eval("acc_id") %>' />
+                </ItemTemplate>
+            </asp:TemplateField>
 
-                            <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Remove" Font-Size="10px" />
-                        </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>--%>
+            <asp:TemplateField HeaderText="Action">
+                <ItemTemplate>
+                    <asp:LinkButton ID="update" runat="server" OnClick="Update_Click" CommandArgument='<%# Eval("acc_id") %>'>
+                        <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" />
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="Remove" runat="server" OnClick="Remove_Click" CommandArgument='<%# Eval("acc_id") %>' OnClientClick="return confirm('Are you sure you want to remove this account manager?');">
+                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Remove" />
+                    </asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateField>
+        </Columns>
 
-                <asp:TemplateField HeaderText="Status" SortExpression="status" ItemStyle-CssClass="columns_label">
-                    <ItemTemplate>
-                        <%--<asp:Button ID="lbstat" runat="server" Text='<%# Eval("status") + " ▲"%>'></asp:Button>--%>
-
-                        <asp:Button Style="font-size: 10px; color: orangered; font-weight: bold; font-size: 10px" ID="btnUnsuspend" runat="server" Text='<%# Eval("acc_status") + " ▼"%>'
-                            CssClass="arrow-button" OnClick="Unsuspend_Click"
-                            OnClientClick="return confirm('Are you sure you want to Unsuspend this account manager?');"
-                            Visible='<%# Eval("acc_status").ToString() == "Suspend" %>' CommandArgument='<%# Eval("acc_id") %>' />
-                        <asp:Label ID="Label9" runat="server" Text='<%# Eval("acc_status")%>' Visible='<%# Eval("acc_status").ToString() == "Inactive" %>' CommandArgument='<%# Eval("acc_id") %>'></asp:Label>
-
-                        <asp:Button Style="font-size: 10px; color: lawngreen; font-weight: bold; font-size: 10px" ID="btnSuspend" runat="server" Text='<%# Eval("acc_status") + " ▲"%>'
-                            CssClass="arrow-button ri-arrow-up-fill" OnClick="Suspend_Click"
-                            OnClientClick="return confirm('Are you sure you want to Suspend this account manager?');"
-                            Visible='<%# Eval("acc_status").ToString() == "Active" %>' CommandArgument='<%# Eval("acc_id") %>' />
-                    </ItemTemplate>
-                </asp:TemplateField>
+        <RowStyle BackColor="White" ForeColor="Black" />
+        <EditRowStyle BackColor="#7C6F57" />
+        <FooterStyle BackColor="Black" Font-Bold="True" ForeColor="#f9cfb4" />
+        <HeaderStyle BackColor="#2c2c2c" Font-Bold="True" ForeColor="Chartreuse" BorderStyle="None" />
+        <PagerStyle BorderColor="#CC9900" Font-Size="20px" BackColor="White" ForeColor="#f9cfb4" HorizontalAlign="Center" />
+        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="White" />
+        <SortedAscendingCellStyle BackColor="Black" />
+        <SortedAscendingHeaderStyle BackColor="#246B61" />
+        <SortedDescendingCellStyle BackColor="Black" />
+        <SortedDescendingHeaderStyle BackColor="#15524A" />
+    </asp:GridView>
+</div>--%>
 
 
 
-                <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="columns_label">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="update" runat="server" OnClick="Update_Click" CommandArgument='<%# Eval("acc_id") %>'>
-                            <asp:Image ID="imgEdit" runat="server" ImageUrl="~/Pictures/editlogo.png" Width="35%" Height="35%" Style="margin-right: 10px" AlternateText="Edit" CssClass="edit-icon" Font-Size="10px" />
-                        </asp:LinkButton>
-                        <asp:LinkButton ID="Remove" runat="server" OnClick="Remove_Click" CommandArgument='<%# Eval("acc_id") %>' OnClientClick="return confirm('Are you sure you want to remove this account manager?');">
-                            <asp:Image ID="Image1" runat="server" ImageUrl="~/Pictures/removeBtn.png" Width="35%" Height="35%" AlternateText="Edit" Font-Size="10px" />
-                        </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
 
-            </Columns>
+          <%--<div class="gridview-container">
+    <asp:GridView ID="gridViewAccountMan" runat="server" AutoGenerateColumns="False" AllowPaging="False" GridLines="None" CssClass="table datatable">
+        <HeaderStyle CssClass="thead-dark" />
+        <RowStyle CssClass="table-row" />
+        <AlternatingRowStyle CssClass="table-row-striped" />
 
-            <RowStyle BackColor="#052507" BorderStyle="Solid" BorderColor="#0a4d1d" />
-            <EditRowStyle Width="10%" BackColor="#7C6F57"></EditRowStyle>
-            <FooterStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
-            <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="mediumaquamarine" BorderStyle="None" />
-            <PagerStyle BorderColor="#CC9900" Font-Size="20px" BackColor="White" ForeColor="White" HorizontalAlign="Center" />
-            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="White" />
-            <SortedAscendingCellStyle BackColor="Black" />
-            <SortedAscendingHeaderStyle BackColor="#246B61" />
-            <SortedDescendingCellStyle BackColor="Black" />
-            <SortedDescendingHeaderStyle BackColor="#15524A" />
-        </asp:GridView>
-    </div>
+        <Columns>
+            <asp:BoundField DataField="acc_fname" SortExpression="acc_fname" ItemStyle-CssClass="column" />
+            <asp:BoundField DataField="acc_contact" HeaderText="Contact" SortExpression="acc_contact" ItemStyle-CssClass="column" />
+            <asp:BoundField DataField="acc_email" HeaderText="Email" SortExpression="acc_email" ItemStyle-CssClass="column" />
+            <asp:BoundField DataField="acc_created_at" HeaderText="Created At" SortExpression="acc_created_at" ItemStyle-CssClass="column" />
+            <asp:BoundField DataField="acc_status" HeaderText="Status" ItemStyle-CssClass="column" />
+        </Columns>
+    </asp:GridView>
+</div>--%>
+
+
+
+
+
 </section>
 
 
@@ -1281,19 +1317,20 @@
         function validateContact() {
             const contact = document.getElementById('<%= txtContact.ClientID %>').value;
             const errorSpan = document.getElementById('upd_contactError');
-            const contactRegex = /^(\+63|0)\d{10}$/;
+            const contactRegex = /^[9]\d{9}$/;  // Contact number must start with '9' and have exactly 10 digits
 
             if (contact === "") {
                 errorSpan.textContent = "Contact number is required.";
                 return false;
             } else if (!contactRegex.test(contact)) {
-                errorSpan.textContent = "Please enter a valid contact number (e.g., 09123456789 or +639123456789).";
+                errorSpan.textContent = "Please enter a valid contact number starting with 9 and having 10 digits (e.g., 9123456789).";
                 return false;
             } else {
                 errorSpan.textContent = "";
                 return true;
             }
         }
+
 
         // Function to validate the Password field
         function validatePassword() {
@@ -1364,6 +1401,22 @@
             if (!isValidFirstname || !isValidLastname || !isValidEmail || !isValidPassword || !isValidContact || !isValidPicture) {
                 e.preventDefault(); // Prevent form submission if validation fails
             }
+        });
+    });
+
+    $(document).ready(function () {
+        // Ensure contact number starts with a non-zero digit and has a max length of 10 digits
+        document.getElementById('<%= txtContact.ClientID %>').addEventListener('input', function () {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+
+            // Remove leading zeros
+            if (this.value.startsWith('0')) {
+                this.value = this.value.replace(/^0+/, '');
+            }
+
+            // Limit to 10 digits
+            this.value = this.value.substring(0, 10);
         });
     });
 

@@ -4,15 +4,16 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Users / Profile - NiceAdmin Bootstrap Template</title>
-      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-      <script type="text/javascript">
-          $(document).ready(function () {
-              // Attach event handler to both textboxes on input change
-              $('#<%= changetxt.ClientID %>').on('input', function () {
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <%--hide unhide pass--%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Users / Profile - NiceAdmin Bootstrap Template</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Attach event handler to both textboxes on input change
+            $('#<%= changetxt.ClientID %>').on('input', function () {
                   compareTextboxes();
               });
 
@@ -20,11 +21,11 @@
                   compareTextboxes();
               });
           });
-          function compareTextboxes() {
-              var value1 = $('#<%= changetxt.ClientID %>').val();
+        function compareTextboxes() {
+            var value1 = $('#<%= changetxt.ClientID %>').val();
               var value2 = $('#<%= confirmtxt.ClientID %>').val();
 
-            var resultLabel = $('#<%= lblResult.ClientID %>');
+              var resultLabel = $('#<%= lblResult.ClientID %>');
 
             if (value1 !== "" && value2 !== "") {
                 if (value1 === value2) {
@@ -45,309 +46,308 @@
 
         function togglePasswordVisibility() {
             var changeTxt = document.getElementById('<%= changetxt.ClientID %>');
-             
 
-             // Toggle the type attribute between 'password' and 'text'
-             changeTxt.type = (changeTxt.type === 'password') ? 'text' : 'password';
-             
+
+            // Toggle the type attribute between 'password' and 'text'
+            changeTxt.type = (changeTxt.type === 'password') ? 'text' : 'password';
+
         }
 
         function togglePasswordVisibility2() {
-            
-             var confirmTxt = document.getElementById('<%= confirmtxt.ClientID %>');
 
-              // Toggle the type attribute between 'password' and 'text'
+            var confirmTxt = document.getElementById('<%= confirmtxt.ClientID %>');
 
-              confirmTxt.type = (confirmTxt.type === 'password') ? 'text' : 'password';
-          }
+            // Toggle the type attribute between 'password' and 'text'
 
-          function goToLoginPage() {
-              window.location.href = "LOGIN.aspx";
-          }
-      </script>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+            confirmTxt.type = (confirmTxt.type === 'password') ? 'text' : 'password';
+        }
 
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+        function goToLoginPage() {
+            window.location.href = "LOGIN.aspx";
+        }
+    </script>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Updated: Nov 17 2023 with Bootstrap v5.3.2
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+<style>
+    /* Style for the toggle password eye icon */
+    .toggle-password i {
+        font-size: 1.2rem;
+        color: gray;
+    }
+
+    .toggle-password:hover i {
+        color: #2ba352; /* Green color on hover */
+    }
+
+    /* Disable style */
+    .form-control[disabled] {
+        background-color: #4b4b4b;
+        opacity: 0.6;
+    }
+
+    /* Wrapper for input fields */
+    .custom-floating {
+        position: relative;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+
+    /* Style for input boxes */
+    .custom-floating input {
+        width: 100%;
+        padding: 20px;
+        border: 2px solid #005c3b;
+        background-color: #031c02;
+        font-size: 16px;
+        color: white;
+        outline: none;
+        border-radius: 30px;
+        caret-color: #2ba352;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Style for the label */
+    .custom-floating label {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: gray;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    /* Floating effect for label */
+    .custom-floating input:focus + label,
+    .custom-floating input:not(:placeholder-shown) + label {
+        top: 5px;
+        left: 20px;
+        font-size: 12px;
+        color: #2ba352;
+        background-color: #031c02;
+        padding: 0 8px;
+    }
+
+    /* Input focus effect */
+    .custom-floating input:focus {
+        border-color: #2ba352;
+        box-shadow: 0 0 5px rgba(43, 163, 82, 0.5);
+    }
+
+    /* Button styles */
+    .btn {
+        background-color: #2ba352;
+        border-color: #005c3b;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 30px;
+        font-weight: bold;
+    }
+
+    .btn:hover {
+        background-color: #28a745;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
 </head>
 
 <body>
 
-  <!-- ======= Header ======= -->
- 
-
-  <!-- ======= Sidebar ======= -->
+    <!-- ======= Header ======= -->
 
 
-  <main id="main" class="main">
+    <!-- ======= Sidebar ======= -->
 
-<%--      <section class="section profile" style="background-color: #000000;">--%>
+
+    <main id="main" class="main">
+
+        <%--      <section class="section profile" style="background-color: #000000;">--%>
 
         <div class="col-xl-8">
 
-          <div class="card" style="background-color: #043108;">
-            <div class="card-body pt-3" style="color: chartreuse;">
-              <!-- Bordered Tabs -->
-              <%--<ul class="nav nav-tabs nav-tabs-bordered">
+            <div class="card" style="background-color: #043108;">
+                <div class="card-body pt-3" style="color: chartreuse;">
 
-                
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                </li>
+                    <div class="tab-content pt-2">
 
-              </ul>--%>
-              <div class="tab-content pt-2">
-                  
-                <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                  <h5 class="card-title" style="color: aquamarine;" >CHANGE PASSWORD</h5>   
-                  <form runat="server">
+                        <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                            <h5 class="card-title" style="color: aquamarine;">CHANGE PASSWORD</h5>
+                            <form runat="server">
 
-                     <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Enter Your Email:</label>
-                      <div class="col-md-8 col-lg-9">
-                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
-                           <asp:TextBox ID="emailtxt" runat="server"></asp:TextBox>
-                      </div>
-                    </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <div class="custom-floating">
+                                        <asp:TextBox ID="emailtxt" runat="server" class="form-control" Style="background-color: #031c02; border-color: #005c3b; border-radius: 30px; border-width: 3px; color: white;"
+                                            placeholder=" " aria-describedby=""></asp:TextBox>
+                                        <label for="emailtxt">Enter Your Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Send Email" OnClick="Button1_Click"/>
 
-                       <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Send Email</label>
-                      <div class="col-md-8 col-lg-9">
-                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
+                                </div>
 
-<%--                           <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Send Email" OnClick="email_Click" />--%>
-                          <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Send Email" />
-
-                      </div>
-                       </div>
-
-                      <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Enter OTP From Email</label>
-                      <div class="col-md-8 col-lg-9">
-                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
-                           <asp:TextBox ID="OTPtxt" runat="server" Enabled="False"></asp:TextBox>
-                      </div>
-                    </div>
-
-                      <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Change Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
-                           <asp:TextBox ID="changetxt" runat="server" TextMode="Password" Enabled="False"></asp:TextBox> <asp:Button ID="changetxttoggle" CssClass="btn btn-info" runat="server" Text="See Password" OnClientClick="togglePasswordVisibility(); return false;" Enabled="False" />
-
-                      </div>
-                    </div>
+                                <div style="display: flex; gap: 15px; justify-content: center; align-items: center; padding: 20px;">
+                                    <asp:TextBox ID="OTPtxt1" runat="server" class="form-control"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 8px; border-width: 2px; color: white; width: 60px; height: 60px; text-align: center; font-size: 28px;"
+                                        MaxLength="1" TextMode="SingleLine"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                    <asp:TextBox ID="OTPtxt2" runat="server" class="form-control"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 8px; border-width: 2px; color: white; width: 60px; height: 60px; text-align: center; font-size: 28px;"
+                                        MaxLength="1" TextMode="SingleLine"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                    <asp:TextBox ID="OTPtxt3" runat="server" class="form-control"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 8px; border-width: 2px; color: white; width: 60px; height: 60px; text-align: center; font-size: 28px;"
+                                        MaxLength="1" TextMode="SingleLine"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                    <asp:TextBox ID="OTPtxt4" runat="server" class="form-control"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 8px; border-width: 2px; color: white; width: 60px; height: 60px; text-align: center; font-size: 28px;"
+                                        MaxLength="1" TextMode="SingleLine"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                    <asp:TextBox ID="OTPtxt5" runat="server" class="form-control"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 8px; border-width: 2px; color: white; width: 60px; height: 60px; text-align: center; font-size: 28px;"
+                                        MaxLength="1" TextMode="SingleLine"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                    <asp:TextBox ID="OTPtxt6" runat="server" class="form-control"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 8px; border-width: 2px; color: white; width: 60px; height: 60px; text-align: center; font-size: 28px;"
+                                        MaxLength="1" TextMode="SingleLine"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                </div>
+                                <div style="text-align: center; margin-top: 10px;">
+                                    <label for="OTPtxt1" style="color: white; font-size: 18px;">Enter OTP From Email</label>
+                                </div>
 
 
-                    <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
-                           <asp:TextBox ID="confirmtxt" runat="server" TextMode="Password" Enabled="False"></asp:TextBox>  <asp:Button ID="confirmtxttoggle" CssClass="btn btn-info" runat="server" Text="See Password" OnClientClick="togglePasswordVisibility2(); return false;" Enabled="False" />
-                          <asp:Label ID="lblResult" runat="server" Text=""></asp:Label>
-                      </div>
-                    </div>
-                      <%--btn btn-secondary--%>
+                                <div class="custom-floating">
+                                    <asp:TextBox ID="changetxt" runat="server" class="form-control" Enabled="False" TextMode="Password"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 30px; border-width: 3px; color: white;"
+                                        placeholder=" " aria-describedby=""></asp:TextBox>
+                                    <label for="changetxt">Change Password</label>
+                                </div>
 
-                       <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label"></label>
-                      <div class="col-md-8 col-lg-9">
-                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
-                            <button type="button" class="btn btn-secondary" onclick="goToLoginPage()">Back to Login</button>
-                          </div>
-                    </div>
+                                <div class="custom-floating">
+                                    <asp:TextBox ID="confirmtxt" runat="server" class="form-control" Enabled="False" TextMode="Password"
+                                        Style="background-color: #031c02; border-color: #005c3b; border-radius: 30px; border-width: 3px; color: white;"
+                                        placeholder=" " aria-describedby=""></asp:TextBox>
+                                    <label for="confirmtxt">Confirm Password</label>
+                                    <asp:Label ID="lblResult" runat="server" Text=""></asp:Label>
+                                </div>
 
-                   <div class="text-center">
-                      <%--<button type="submit" class="btn btn-primary">Change Password</button>--%>
-<%--                        <asp:Button ID="changepassword" runat="server" CssClass="btn btn-warning" Text="Change Password" Enabled="False" OnClick="changepassword_Click" />--%>
-                                               <asp:Button ID="changepassword" runat="server" CssClass="btn btn-warning" Text="Change Password" Enabled="False" />
+                                <div class="row mb-3">
+                                    <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label"></label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <%--<input name="password" type="password" class="form-control" id="currentPassword">--%>
+                                        <button type="button" class="btn btn-secondary" onclick="goToLoginPage()">Back to Login</button>
+                                    </div>
+                                </div>
 
-                    </div>
-                  </form><!-- End Change Password Form -->
+                                <div class="text-center">
+                                    <asp:Button ID="changepassword" runat="server" CssClass="btn btn-warning" Text="Change Password" Enabled="False" OnClick="changepassword_Click" />
 
-                </div>
+                                </div>
+                            </form>
+                            <!-- End Change Password Form -->
 
-                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-
-                  <!-- Profile Edit Form -->
-                  <form>
-                    <%--<div class="row mb-3">
-                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
-                      <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
-                        <div class="pt-2">
-                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
                         </div>
-                      </div>
+            
                     </div>
-
-                    <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
-                      <div class="col-md-8 col-lg-9">
-                        <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="company" class="col-md-4 col-lg-3 col-form-label">Company</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="country" type="text" class="form-control" id="Country" value="USA">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="twitter" type="text" class="form-control" id="Twitter" value="https://twitter.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="facebook" type="text" class="form-control" id="Facebook" value="https://facebook.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="instagram" type="text" class="form-control" id="Instagram" value="https://instagram.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="linkedin" type="text" class="form-control" id="Linkedin" value="https://linkedin.com/#">
-                      </div>
-                    </div>
-
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>--%>
-                  </form><!-- End Profile Edit Form -->
+                    <!-- End Bordered Tabs -->
 
                 </div>
-
-                <div class="tab-pane fade pt-3" id="profile-settings">
-
-                  <!-- Settings Form -->
-                  <form>
-
-                  
-                  </form><!-- End settings Form -->
-
-                </div>
-
-                <div class="tab-pane fade pt-3" id="profile-change-password">
-                  <!-- Change Password Form -->
-                 
-
-                </div>
-
-              </div><!-- End Bordered Tabs -->
-
             </div>
-          </div>
 
         </div>
-<%--    </section>--%>
+        <%--    </section>--%>
+    </main>
+    <!-- End #main -->
 
-  </main><!-- End #main -->
+    <script>
+        <%--   function togglePassword() {
+    var passwordField = document.getElementById('<%= exampleInputPassword.ClientID %>');
+    var toggleIcon = document.getElementById('toggleIcon');
 
-  <!-- ======= Footer ======= -->
-  <!-- ======= Footer ======= -->
- <footer id="footer" class="footer" style="border-top-color: chartreuse">
-   <div class="copyright" style="color: #d4f3cf">
-     &copy; Copyright <strong><span style="color: #d4f3cf">Pinoy Basurero Corporation</span></strong>. All Rights Reserved
-   </div>
- </footer><!-- End Footer -->
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+    } else {
+        passwordField.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+    }--%>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+        <%--function checkOTP() {
+            // Get values from OTP input fields
+            var otp = [
+                document.getElementById('<%= OTPtxt1.ClientID %>').value,
+            document.getElementById('<%= OTPtxt2.ClientID %>').value,
+            document.getElementById('<%= OTPtxt3.ClientID %>').value,
+            document.getElementById('<%= OTPtxt4.ClientID %>').value,
+            document.getElementById('<%= OTPtxt5.ClientID %>').value,
+                document.getElementById('<%= OTPtxt6.ClientID %>').value
+            ].join('');
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.min.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+            // Check if all fields are filled
+            if (otp.length === 6) {
+                // Make an AJAX call to verify the OTP
+                PageMethods.VerifyOTP(otp, onSuccess, onError);
+            }
+        }
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+        function onSuccess(result) {
+            alert(result);
+        }
+
+        function onError(error) {
+            alert('Error verifying OTP: ' + error.get_message());
+        }--%>
+    </script>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="assets/vendor/echarts/echarts.min.js"></script>
+    <script src="assets/vendor/quill/quill.min.js"></script>
+    <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="assets/js/main.js"></script>
 
 </body>
 

@@ -487,12 +487,11 @@ namespace Capstone
             {
                 try
                 {
-                    // Check if the uploaded file is an image
                     string fileExtension = Path.GetExtension(FileUpload1.PostedFile.FileName).ToLower();
                     string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
                     if (allowedExtensions.Contains(fileExtension))
                     {
-                        uploadedImageData = FileUpload1.FileBytes;  // Convert the uploaded file to byte array
+                        uploadedImageData = FileUpload1.FileBytes;
                     }
                     else
                     {
@@ -510,6 +509,21 @@ namespace Capstone
             using (var db = new NpgsqlConnection(con))
             {
                 db.Open();
+
+                // Check if the email already exists (excluding the current admin's email)
+                string emailCheckQuery = "SELECT COUNT(*) FROM account_manager WHERE acc_email = @newEmail AND acc_id <> @id";
+                using (var cmdCheckEmail = new NpgsqlCommand(emailCheckQuery, db))
+                {
+                    cmdCheckEmail.Parameters.AddWithValue("@newEmail", email);
+                    cmdCheckEmail.Parameters.AddWithValue("@id", id);
+
+                    int emailExists = Convert.ToInt32(cmdCheckEmail.ExecuteScalar());
+                    if (emailExists > 0)
+                    {
+                        Response.Write("<script>alert('Email is already taken. Please use a different email.')</script>");
+                        return;
+                    }
+                }
 
                 // Get current data for the admin based on the ID
                 string selectQuery = "SELECT acc_fname, acc_mname, acc_lname, acc_contact, acc_email, acc_password, acc_profile FROM account_manager WHERE acc_id = @id";
@@ -535,7 +549,7 @@ namespace Capstone
                             originalContact = reader["acc_contact"].ToString();
                             originalEmail = reader["acc_email"].ToString();
                             originalPassword = reader["acc_password"].ToString();
-                            originalProfileImage = reader["acc_profile"] as byte[];  // Get original profile image
+                            originalProfileImage = reader["acc_profile"] as byte[];
                         }
                         else
                         {
@@ -544,7 +558,6 @@ namespace Capstone
                         }
                     }
 
-                    // Build the UPDATE query dynamically based on the fields that have changed
                     var updateFields = new List<string>();
                     var updateParams = new List<NpgsqlParameter>();
                     var changes = new List<string>();
@@ -588,7 +601,6 @@ namespace Capstone
                         changes.Add("Password: (Updated)");
                     }
 
-                    // Include the uploaded image if available
                     if (uploadedImageData != null)
                     {
                         updateFields.Add("acc_profile = @profile");
@@ -612,15 +624,14 @@ namespace Capstone
                                 string subject = "Account Information Update Notification";
                                 string body = $"Dear Admin,\n\nYour account information has been updated. Below are the details of the changes:\n\n{changeDetails}\n\nIf you did not request these changes, please contact support immediately.\n\nBest regards,\nThe Account Manager Team";
 
-                                // Send email to notify changes
                                 if (!string.IsNullOrEmpty(email) && email != originalEmail)
                                 {
-                                    Send_Email(originalEmail, subject, body);  // Send to old email
-                                    Send_Email(email, subject, body);          // Send to new email
+                                    Send_Email(originalEmail, subject, body);
+                                    Send_Email(email, subject, body);
                                 }
                                 else
                                 {
-                                    Send_Email(originalEmail, subject, body);  // Send to the same email
+                                    Send_Email(originalEmail, subject, body);
                                 }
 
                                 Response.Write("<script>alert('Admin information updated successfully!')</script>");
@@ -638,6 +649,7 @@ namespace Capstone
                 }
             }
         }
+
 
 
 

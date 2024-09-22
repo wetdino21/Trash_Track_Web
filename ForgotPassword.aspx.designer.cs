@@ -33,13 +33,58 @@ namespace Capstone
         protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
-        /// OTPtxt control.
+        /// OTPtxt1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox OTPtxt;
+        protected global::System.Web.UI.WebControls.TextBox OTPtxt1;
+
+        /// <summary>
+        /// OTPtxt2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox OTPtxt2;
+
+        /// <summary>
+        /// OTPtxt3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox OTPtxt3;
+
+        /// <summary>
+        /// OTPtxt4 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox OTPtxt4;
+
+        /// <summary>
+        /// OTPtxt5 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox OTPtxt5;
+
+        /// <summary>
+        /// OTPtxt6 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox OTPtxt6;
 
         /// <summary>
         /// changetxt control.
@@ -51,15 +96,6 @@ namespace Capstone
         protected global::System.Web.UI.WebControls.TextBox changetxt;
 
         /// <summary>
-        /// changetxttoggle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button changetxttoggle;
-
-        /// <summary>
         /// confirmtxt control.
         /// </summary>
         /// <remarks>
@@ -67,15 +103,6 @@ namespace Capstone
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox confirmtxt;
-
-        /// <summary>
-        /// confirmtxttoggle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button confirmtxttoggle;
 
         /// <summary>
         /// lblResult control.
