@@ -17,6 +17,8 @@ using System.Net.Mail;
 using System.Net;
 using System.Xml.Linq;
 
+
+
 namespace Capstone
 {
     public partial class Account_Manager_ManageAccount : System.Web.UI.Page
@@ -27,11 +29,119 @@ namespace Capstone
         {
             if (!IsPostBack)
             {
+                LoadRoles();
                 AccountManList();
-                //profile_image.DataBind();
                 LoadProfile();
+
+                //// Fetch data from PostgreSQL
+                //DataTable dt = GetAccountManagers();
+
+                //// Build the HTML for the table body
+                //string tableBodyHtml = string.Empty;
+
+                //foreach (DataRow row in dt.Rows)
+                //{
+                //    tableBodyHtml += "<tr>";
+                //    tableBodyHtml += "<td>" + row["acc_id"] + "</td>"; // ID
+                //    tableBodyHtml += "<td>" + row["acc_fname"] + "</td>"; // First Name
+                //    tableBodyHtml += "<td>" + row["acc_mname"] + "</td>"; // M.I.
+                //    tableBodyHtml += "<td>" + row["acc_lname"] + "</td>"; // Last Name
+                //    tableBodyHtml += "<td>" + row["acc_contact"] + "</td>"; // Contact
+                //    tableBodyHtml += "<td>" + row["acc_email"] + "</td>"; // Email
+                //    tableBodyHtml += "<td>" + Convert.ToDateTime(row["acc_created_at"]).ToString("yyyy/MM/dd") + "</td>"; // Created At
+                //    tableBodyHtml += "<td>" + Convert.ToDateTime(row["acc_updated_at"]).ToString("yyyy/MM/dd") + "</td>"; // Updated At
+                //    tableBodyHtml += "<td>" + row["acc_status"] + "</td>"; // Status
+
+                //    // Status Button (Suspend/Unsuspend)
+                //    if (row["acc_status"].ToString() == "Active")
+                //    {
+                //        tableBodyHtml += "<td><button style='color: lawngreen;' onclick=\"suspend(" + row["acc_id"] + ")\">Suspend ▲</button></td>";
+                //    }
+                //    else if (row["acc_status"].ToString() == "Suspend")
+                //    {
+                //        tableBodyHtml += "<td><button style='color: orangered;' onclick=\"unsuspend(" + row["acc_id"] + ")\">Unsuspend ▼</button></td>";
+                //    }
+                //    else
+                //    {
+                //        tableBodyHtml += "<td>" + row["acc_status"] + "</td>";
+                //    }
+
+                //    // Action Buttons (Edit and Remove)
+                //    tableBodyHtml += "<td>";
+                //    tableBodyHtml += "<a href='EditAccount.aspx?acc_id=" + row["acc_id"] + "'><img src='~/Pictures/editlogo.png' width='35%' height='35%' style='margin-right: 10px;' alt='Edit' /></a>";
+                //    tableBodyHtml += "<a href='RemoveAccount.aspx?acc_id=" + row["acc_id"] + "' onclick=\"return confirm('Are you sure you want to remove this account manager?');\"><img src='~/Pictures/removeBtn.png' width='35%' height='35%' alt='Remove' /></a>";
+                //    tableBodyHtml += "</td>";
+
+                //    tableBodyHtml += "</tr>";
+                //}
+
+                //// Log table body HTML to check content
+                //System.Diagnostics.Debug.WriteLine("Table Body HTML: " + tableBodyHtml);
+
+                //// Inject the HTML into the Literal control
+                //tableBodyLiteral.Text = tableBodyHtml;
             }
 
+        }
+
+
+
+
+        private void LoadRoles()
+        {
+            using (NpgsqlConnection conn = new NpgsqlConnection(con))
+            {
+                string query = "SELECT role_id, role_name FROM roles ORDER BY role_id";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                try
+                {
+                    conn.Open();
+                    NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    emp_role.DataSource = dt;
+                    emp_role.DataTextField = "role_name";
+                    emp_role.DataValueField = "role_id";
+                    emp_role.DataBind();
+
+                    // Clear existing items and add the default "Select Role" option at the top
+                    emp_role.Items.Clear();
+                    ListItem selectRoleItem = new ListItem("--Select Role--", "0");
+                    selectRoleItem.Attributes.Add("disabled", "true"); // Disable the item
+                    selectRoleItem.Attributes.Add("selected", "true"); // Set as selected
+                    emp_role.Items.Add(selectRoleItem);
+                    emp_role.Items.AddRange(dt.AsEnumerable().Select(row => new ListItem(row["role_name"].ToString(), row["role_id"].ToString())).ToArray());
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (logging, showing a message, etc.)
+                }
+            }
+        }
+
+
+
+
+
+        // Function to retrieve data from PostgreSQL
+        private DataTable GetAccountManagers()
+        {
+            DataTable dt = new DataTable();
+            using (NpgsqlConnection conn = new NpgsqlConnection(con))
+            {
+                conn.Open();
+                string query = "SELECT emp_id, emp_fname, emp_mname, emp_lname, emp_contact, emp_email, emp_created_at, emp_updated_at, emp_status FROM employee";
+                using (NpgsqlCommand cmd = new NpgsqlCommand(query, conn))
+                {
+                    using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+            }
+            return dt;
         }
 
 
@@ -58,7 +168,7 @@ namespace Capstone
                     db.Open();
 
                     // PostgreSQL query to get profile image
-                    string query = "SELECT acc_profile FROM account_manager WHERE acc_id = @id";
+                    string query = "SELECT emp_profile FROM employee WHERE emp_id = @id";
                     using (var cmd = new NpgsqlCommand(query, db))
                     {
                         // Set the parameter for admin ID
@@ -110,17 +220,16 @@ namespace Capstone
                 {
                     cmd.CommandType = CommandType.Text;
                     // Modified the query to match the column names in the account_manager table
-                    cmd.CommandText = "SELECT * FROM account_manager WHERE acc_status != 'Deleted' AND acc_id != @id ORDER BY acc_id, acc_status";
+                    cmd.CommandText = "SELECT * FROM employee WHERE emp_status != 'Deleted' AND emp_id != @id ORDER BY emp_id, emp_status";
                     cmd.Parameters.AddWithValue("@id", Convert.ToInt32(Session["id"]));
 
                     DataTable admin_datatable = new DataTable();
                     NpgsqlDataAdapter admin_sda = new NpgsqlDataAdapter(cmd);
                     admin_sda.Fill(admin_datatable);
 
-                    gridViewAccountMan.DataSource = admin_datatable;;
+                    gridViewAccountMan.DataSource = admin_datatable; ;
                     gridViewAccountMan.DataBind();
                 }
-
                 db.Close();
             }
         }
@@ -511,7 +620,7 @@ namespace Capstone
                 db.Open();
 
                 // Check if the email already exists (excluding the current admin's email)
-                string emailCheckQuery = "SELECT COUNT(*) FROM account_manager WHERE acc_email = @newEmail AND acc_id <> @id";
+                string emailCheckQuery = "SELECT COUNT(*) FROM employee WHERE emp_email = @newEmail AND emp_id <> @id";
                 using (var cmdCheckEmail = new NpgsqlCommand(emailCheckQuery, db))
                 {
                     cmdCheckEmail.Parameters.AddWithValue("@newEmail", email);
@@ -526,7 +635,7 @@ namespace Capstone
                 }
 
                 // Get current data for the admin based on the ID
-                string selectQuery = "SELECT acc_fname, acc_mname, acc_lname, acc_contact, acc_email, acc_password, acc_profile FROM account_manager WHERE acc_id = @id";
+                string selectQuery = "SELECT emp_fname, emp_mname, emp_lname, emp_contact, emp_email, emp_password, emp_profile FROM employee WHERE emp_id = @id";
                 using (var cmdSelect = new NpgsqlCommand(selectQuery, db))
                 {
                     cmdSelect.Parameters.AddWithValue("@id", id);
@@ -543,13 +652,13 @@ namespace Capstone
                     {
                         if (reader.Read())
                         {
-                            originalFirstname = reader["acc_fname"].ToString();
-                            originalMi = reader["acc_mname"].ToString();
-                            originalLastname = reader["acc_lname"].ToString();
-                            originalContact = reader["acc_contact"].ToString();
-                            originalEmail = reader["acc_email"].ToString();
-                            originalPassword = reader["acc_password"].ToString();
-                            originalProfileImage = reader["acc_profile"] as byte[];
+                            originalFirstname = reader["emp_fname"].ToString();
+                            originalMi = reader["emp_mname"].ToString();
+                            originalLastname = reader["emp_lname"].ToString();
+                            originalContact = reader["emp_contact"].ToString();
+                            originalEmail = reader["emp_email"].ToString();
+                            originalPassword = reader["emp_password"].ToString();
+                            originalProfileImage = reader["emp_profile"] as byte[];
                         }
                         else
                         {
@@ -565,52 +674,52 @@ namespace Capstone
                     // Check and update each field
                     if (!string.IsNullOrEmpty(firstname) && firstname != originalFirstname)
                     {
-                        updateFields.Add("acc_fname = @firstname");
+                        updateFields.Add("emp_fname = @firstname");
                         updateParams.Add(new NpgsqlParameter("@firstname", firstname));
                         changes.Add($"First Name: {originalFirstname} → {firstname}");
                     }
                     if (!string.IsNullOrEmpty(mi) && mi != originalMi)
                     {
-                        updateFields.Add("acc_mname = @mi");
+                        updateFields.Add("emp_mname = @mi");
                         updateParams.Add(new NpgsqlParameter("@mi", mi));
                         changes.Add($"Middle Initial: {originalMi} → {mi}");
                     }
                     if (!string.IsNullOrEmpty(lastname) && lastname != originalLastname)
                     {
-                        updateFields.Add("acc_lname = @lastname");
+                        updateFields.Add("emp_lname = @lastname");
                         updateParams.Add(new NpgsqlParameter("@lastname", lastname));
                         changes.Add($"Last Name: {originalLastname} → {lastname}");
                     }
                     if (!string.IsNullOrEmpty(contact) && contact != originalContact)
                     {
-                        updateFields.Add("acc_contact = @contact");
+                        updateFields.Add("emp_contact = @contact");
                         updateParams.Add(new NpgsqlParameter("@contact", contact));
                         changes.Add($"Contact: {originalContact} → {contact}");
                     }
                     if (!string.IsNullOrEmpty(email) && email != originalEmail)
                     {
-                        updateFields.Add("acc_email = @email");
+                        updateFields.Add("emp_email = @email");
                         updateParams.Add(new NpgsqlParameter("@email", email));
                         changes.Add($"Email: {originalEmail} → {email}");
                     }
                     if (!string.IsNullOrEmpty(pass) && pass != originalPassword)
                     {
                         string hashedPassword = HashPassword(pass);
-                        updateFields.Add("acc_password = @password");
+                        updateFields.Add("emp_password = @password");
                         updateParams.Add(new NpgsqlParameter("@password", hashedPassword));
                         changes.Add("Password: (Updated)");
                     }
 
                     if (uploadedImageData != null)
                     {
-                        updateFields.Add("acc_profile = @profile");
+                        updateFields.Add("emp_profile = @profile");
                         updateParams.Add(new NpgsqlParameter("@profile", uploadedImageData));
                         changes.Add("Profile Picture: Updated");
                     }
 
                     if (updateFields.Count > 0)
                     {
-                        string updateQuery = $"UPDATE account_manager SET {string.Join(", ", updateFields)} WHERE acc_id = @id";
+                        string updateQuery = $"UPDATE employee SET {string.Join(", ", updateFields)} WHERE emp_id = @id";
                         using (var cmdUpdate = new NpgsqlCommand(updateQuery, db))
                         {
                             cmdUpdate.Parameters.AddWithValue("@id", id);
@@ -652,24 +761,21 @@ namespace Capstone
 
 
 
-
-
         protected void submitBtn_Click(object sender, EventArgs e)
         {
-            string role = emp_role.Text;
-            string hashedPassword = HashPassword(emp_pass.Text);
-            byte[] defaultImageData = File.ReadAllBytes(Server.MapPath("Pictures\\blank_prof.png"));
-            byte[] imageData = formFile.HasFile ? formFile.FileBytes : defaultImageData;
+
+            int adminId = (int)Session["sam_id"];
+
+            // Extracting user input
+            string roleIdString = emp_role.SelectedValue; // Get selected role_id
+            Response.Write($"<script>alert('Submit Button Clicked! Role ID: {roleIdString}')</script>");
+            string hashedPassword = HashPassword(emp_pass.Text);  // Hashing the password
+            byte[] defaultImageData = File.ReadAllBytes(Server.MapPath("Pictures\\blank_prof.png"));  // Default profile image
+            byte[] imageData = formFile.HasFile ? formFile.FileBytes : defaultImageData;  // Use uploaded image or default image
             string email = emp_email.Text;
+
             bool emailExists = false;
             bool isEmailSuspendedOrInactive = false;
-
-            //// Ensure valid email format if necessary
-            //if (!IsValidEmail(email))
-            //{
-            //    Response.Write("<script>alert('Invalid email format.')</script>");
-            //    return;
-            //}
 
             // Email Message
             string toAddress = email;
@@ -685,28 +791,26 @@ namespace Capstone
                 $"The Account Manager Team\n" +
                 $"[Company Name]";
 
-            // Proceed with form submission if all fields are filled
+            // Validation: Ensure all required fields are filled
             if (!string.IsNullOrEmpty(emp_firstname.Text) &&
+                !string.IsNullOrEmpty(emp_lastname.Text) &&
                 !string.IsNullOrEmpty(emp_email.Text) &&
                 !string.IsNullOrEmpty(emp_pass.Text) &&
-                (role == "Super Account Manager" || role == "Account Manager"))
+                !string.IsNullOrEmpty(emp_address.Text) &&
+                !string.IsNullOrEmpty(emp_contact.Text) &&
+                !string.IsNullOrEmpty(roleIdString) && // Validate that a role is selected
+                roleIdString != "0") // Check if a valid role is selected
             {
                 // Connect to PostgreSQL
                 using (var db = new NpgsqlConnection(con))
                 {
                     db.Open();
 
-                    // Query to check if the email exists and its status across all tables
+                    // SQL query to check if the email exists in any relevant table and retrieve status
                     string emailCheckQuery = @"
-                SELECT cus_email AS email, cus_status AS status FROM customer WHERE cus_email = @emp_email
-                UNION ALL
-                SELECT haul_email AS email, haul_role AS status FROM hauler WHERE haul_email = @emp_email
-                UNION ALL
-                SELECT bo_email AS email, bo_status AS status FROM billing_officer WHERE bo_email = @emp_email
-                UNION ALL
-                SELECT op_email AS email, op_status AS status FROM operational_dispatcher WHERE op_email = @emp_email
-                UNION ALL
-                SELECT acc_email AS email, acc_status AS status FROM account_manager WHERE acc_email = @emp_email";
+SELECT cus_email AS email, cus_status AS status FROM customer WHERE cus_email = @emp_email
+UNION ALL
+SELECT emp_email AS email, emp_status AS status FROM employee WHERE emp_email = @emp_email";
 
                     using (var cmd = new NpgsqlCommand(emailCheckQuery, db))
                     {
@@ -714,12 +818,13 @@ namespace Capstone
 
                         using (var reader = cmd.ExecuteReader())
                         {
+                            // Check if the email exists in any table and check its status
                             while (reader.Read())
                             {
-                                emailExists = true;  // Email found in one of the tables
+                                emailExists = true;  // Email exists
                                 string status = reader["status"].ToString().ToLower();
 
-                                // Check if the status is inactive or suspended
+                                // Email is inactive or suspended
                                 if (status == "inactive" || status == "suspend")
                                 {
                                     isEmailSuspendedOrInactive = true;
@@ -729,46 +834,59 @@ namespace Capstone
                         }
                     }
 
-                    // If email already exists or is inactive/suspended, prevent insertion
+                    // If email exists and is suspended/inactive, prevent the addition of a new account manager
                     if (emailExists)
                     {
                         if (isEmailSuspendedOrInactive)
                         {
-                            // Display alert for inactive or suspended email
                             Response.Write("<script>alert('The email is associated with an inactive or suspended account. Please use a different email.')</script>");
                         }
-                        else
-                        {
-                            // Display alert for email already existing
-                            Response.Write("<script>alert('The email already exists. Please use a different email.')</script>");
-                        }
-                        return; // Exit function without inserting the account manager
+                        //else
+                        //{
+                        //    Response.Write("<script>alert('The email already exists. Please use a different email.')</script>");
+                        //}
+                        return;  // Exit the function if the email is invalid or already exists
                     }
 
-                    // If no email issues, proceed to insert the new account manager
-                    using (var cmd = new NpgsqlCommand("INSERT INTO account_manager (acc_fname, acc_mname, acc_lname, acc_password, acc_contact, acc_email, acc_role, acc_profile) " +
-                                                       "VALUES (@acc_fname, @acc_mname, @acc_lname, @acc_password, @acc_contact, @acc_email, @acc_role, @acc_profile)", db))
-                    {
-                        cmd.Parameters.AddWithValue("@acc_fname", emp_firstname.Text);
-                        cmd.Parameters.AddWithValue("@acc_mname", emp_mi.Text);
-                        cmd.Parameters.AddWithValue("@acc_lname", emp_lastname.Text);
-                        cmd.Parameters.AddWithValue("@acc_password", hashedPassword);
-                        cmd.Parameters.AddWithValue("@acc_contact", emp_contact.Text);
-                        cmd.Parameters.AddWithValue("@acc_email", email);
-                        cmd.Parameters.AddWithValue("@acc_role", role);
-                        cmd.Parameters.AddWithValue("@acc_profile", imageData);  // Profile image as byte array
+                    // Validate roleId and proceed
+                    int roleId = int.Parse(roleIdString); // Convert the selected value to an integer
 
+                    // Optional: Assign acc_id and emp_otp if required by your application logic
+                    string empOtp = null; // If you want to generate a one-time password
+
+                    // Proceed to insert the new Account Manager
+                    using (var cmd = new NpgsqlCommand(
+                        @"INSERT INTO employee 
+                (emp_fname, emp_mname, emp_lname, emp_contact, emp_address, emp_email, emp_password, emp_profile, role_id, acc_id, emp_created_at, emp_updated_at, emp_otp) 
+                VALUES (@emp_fname, @emp_mname, @emp_lname, @emp_contact, @emp_address, @emp_email, @emp_password, @emp_profile, @role_id, @acc_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, @emp_otp)", db))
+                    {
+                        // Adding parameters to prevent SQL injection
+                        cmd.Parameters.AddWithValue("@emp_fname", emp_firstname.Text);
+                        cmd.Parameters.AddWithValue("@emp_mname", emp_mi.Text);
+                        cmd.Parameters.AddWithValue("@emp_lname", emp_lastname.Text);
+                        cmd.Parameters.AddWithValue("@emp_contact", emp_contact.Text);
+                        cmd.Parameters.AddWithValue("@emp_address", emp_address.Text);  // Include employee address
+                        cmd.Parameters.AddWithValue("@emp_email", email);
+                        cmd.Parameters.AddWithValue("@emp_password", hashedPassword);
+                        cmd.Parameters.AddWithValue("@emp_profile", imageData);  // Profile image as byte array
+                        cmd.Parameters.AddWithValue("@role_id", roleId);  // Insert role_id
+                        cmd.Parameters.AddWithValue("@acc_id", adminId);  // Handle nullable acc_id
+                        cmd.Parameters.AddWithValue("@emp_otp", (object)empOtp ?? DBNull.Value);  // Handle nullable emp_otp
+
+                        // Execute the query and check how many rows were affected
                         int ctr = cmd.ExecuteNonQuery();
                         if (ctr >= 1)
                         {
+                            // Success: Account Manager added
                             Response.Write("<script>alert('Account Manager Added!')</script>");
-                            AccountManList(); // Reload or update the list of Account Managers
-                            Send_Email(toAddress, subject, body);
+                            AccountManList();  // Reload or update the list of Account Managers
+                            Send_Email(toAddress, subject, body);  // Optionally send a welcome email
                         }
                         else
                         {
+                            // Failure: Account Manager registration failed
                             Response.Write("<script>alert('Account Manager failed to Register!')</script>");
-                            AccountManList(); // Reload or update the list of Account Managers
+                            AccountManList();  // Reload or update the list of Account Managers
                         }
                     }
 
@@ -777,10 +895,144 @@ namespace Capstone
             }
             else
             {
-                Response.Write("<script>alert('Fill up all the fields!')</script>");
+                // Validation error: Required fields are not filled
+                Response.Write("<script>alert('Please fill up all the required fields!')</script>");
             }
-
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //protected void submitBtn_Click(object sender, EventArgs e)
+        //{
+        //    string role = emp_role.Text;
+        //    string hashedPassword = HashPassword(emp_pass.Text);
+        //    byte[] defaultImageData = File.ReadAllBytes(Server.MapPath("Pictures\\blank_prof.png"));
+        //    byte[] imageData = formFile.HasFile ? formFile.FileBytes : defaultImageData;
+        //    string email = emp_email.Text;
+        //    bool emailExists = false;
+        //    bool isEmailSuspendedOrInactive = false;
+
+        //    //// Ensure valid email format if necessary
+        //    //if (!IsValidEmail(email))
+        //    //{
+        //    //    Response.Write("<script>alert('Invalid email format.')</script>");
+        //    //    return;
+        //    //}
+
+        //    // Email Message
+        //    string toAddress = email;
+        //    string subject = "Important: Your Login Credentials for Completing Registration";
+        //    string body = $"Dear Staff and Good Day!,\n\n" +
+        //        $"As a part of our onboarding process, we have generated your initial login credentials. Please use the following information to access the designated registration website and complete your profile:\n\n" +
+        //        $"Email: {email}\n" +
+        //        $"Password: {emp_pass.Text}\n\n" +
+        //        $"Visit the registration page on our main login page.\n\n" +
+        //        $"Once you log in, kindly fill out the remaining information required to complete your registration. After completing this step, these credentials will serve as your permanent login information for daily use in our system.\n\n" +
+        //        $"If you encounter any issues or have any questions, please do not hesitate to contact our support team.\n\n" +
+        //        $"Best regards,\n" +
+        //        $"The Account Manager Team\n" +
+        //        $"[Company Name]";
+
+        //    // Proceed with form submission if all fields are filled
+        //    if (!string.IsNullOrEmpty(emp_firstname.Text) &&
+        //        !string.IsNullOrEmpty(emp_email.Text) &&
+        //        !string.IsNullOrEmpty(emp_pass.Text) &&
+        //        (role == "Super Account Manager" || role == "Account Manager"))
+        //    {
+        //        // Connect to PostgreSQL
+        //        using (var db = new NpgsqlConnection(con))
+        //        {
+        //            db.Open();
+
+        //            // Query to check if the email exists and its status across all tables
+        //            string emailCheckQuery = @"
+        //        SELECT cus_email AS email, cus_status AS status FROM customer WHERE cus_email = @emp_email
+        //        UNION ALL
+        //        SELECT emp_email AS email, emp_status AS status FROM employee WHERE emp_email = @emp_email";
+
+        //            using (var cmd = new NpgsqlCommand(emailCheckQuery, db))
+        //            {
+        //                cmd.Parameters.AddWithValue("@emp_email", email);
+
+        //                using (var reader = cmd.ExecuteReader())
+        //                {
+        //                    while (reader.Read())
+        //                    {
+        //                        emailExists = true;  // Email found in one of the tables
+        //                        string status = reader["status"].ToString().ToLower();
+
+        //                        // Check if the status is inactive or suspended
+        //                        if (status == "inactive" || status == "suspend")
+        //                        {
+        //                            isEmailSuspendedOrInactive = true;
+        //                            break;
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+        //            // If email already exists or is inactive/suspended, prevent insertion
+        //            if (emailExists)
+        //            {
+        //                if (isEmailSuspendedOrInactive)
+        //                {
+        //                    // Display alert for inactive or suspended email
+        //                    Response.Write("<script>alert('The email is associated with an inactive or suspended account. Please use a different email.')</script>");
+        //                }
+        //                else
+        //                {
+        //                    // Display alert for email already existing
+        //                    Response.Write("<script>alert('The email already exists. Please use a different email.')</script>");
+        //                }
+        //                return; // Exit function without inserting the account manager
+        //            }
+
+        //            // If no email issues, proceed to insert the new account manager
+        //            using (var cmd = new NpgsqlCommand("INSERT INTO employee (emp_fname, emp_mname, emp_lname, emp_password, emp_contact, emp_email, emp_role, emp_profile) " +
+        //                                               "VALUES (@acc_fname, @acc_mname, @acc_lname, @acc_password, @acc_contact, @acc_email, @acc_role, @acc_profile)", db))
+        //            {
+        //                cmd.Parameters.AddWithValue("@acc_fname", emp_firstname.Text);
+        //                cmd.Parameters.AddWithValue("@acc_mname", emp_mi.Text);
+        //                cmd.Parameters.AddWithValue("@acc_lname", emp_lastname.Text);
+        //                cmd.Parameters.AddWithValue("@acc_password", hashedPassword);
+        //                cmd.Parameters.AddWithValue("@acc_contact", emp_contact.Text);
+        //                cmd.Parameters.AddWithValue("@acc_email", email);
+        //                cmd.Parameters.AddWithValue("@acc_role", role);
+        //                cmd.Parameters.AddWithValue("@acc_profile", imageData);  // Profile image as byte array
+
+        //                int ctr = cmd.ExecuteNonQuery();
+        //                if (ctr >= 1)
+        //                {
+        //                    Response.Write("<script>alert('Account Manager Added!')</script>");
+        //                    AccountManList(); // Reload or update the list of Account Managers
+        //                    Send_Email(toAddress, subject, body);
+        //                }
+        //                else
+        //                {
+        //                    Response.Write("<script>alert('Account Manager failed to Register!')</script>");
+        //                    AccountManList(); // Reload or update the list of Account Managers
+        //                }
+        //            }
+
+        //            db.Close();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Response.Write("<script>alert('Fill up all the fields!')</script>");
+        //    }
+
+        //}
 
 
 
@@ -974,9 +1226,9 @@ namespace Capstone
 
                     // Define the SQL query to get the admin details based on the admin ID (acc_id)
                     string query = @"
-                SELECT acc_fname, acc_mname, acc_lname, acc_contact, acc_email, acc_profile 
-                FROM account_manager 
-                WHERE acc_id = @acc_id";
+                SELECT emp_fname, emp_mname, emp_lname, emp_contact, emp_email, emp_profile 
+                FROM employee 
+                WHERE emp_id = @acc_id";
 
                     using (var cmd = new NpgsqlCommand(query, db))
                     {
@@ -988,12 +1240,12 @@ namespace Capstone
                             if (reader.Read()) // Check if data is available for the given admin ID
                             {
                                 // Assign the data to the respective textboxes
-                                txtbfirstname.Text = reader["acc_fname"].ToString();
-                                txtmi.Text = reader["acc_mname"].ToString();
-                                txtLastname.Text = reader["acc_lname"].ToString();
-                                txtContact.Text = reader["acc_contact"].ToString();
-                                txtEmail.Text = reader["acc_email"].ToString();
-                                byte[] imageData = reader["acc_profile"] as byte[];  // Retrieve profile image data (byte array)
+                                txtbfirstname.Text = reader["emp_fname"].ToString();
+                                txtmi.Text = reader["emp_mname"].ToString();
+                                txtLastname.Text = reader["emp_lname"].ToString();
+                                txtContact.Text = reader["emp_contact"].ToString();
+                                txtEmail.Text = reader["emp_email"].ToString();
+                                byte[] imageData = reader["emp_profile"] as byte[];  // Retrieve profile image data (byte array)
 
                                 // Display profile image in the preview control
                                 if (imagePreviewUpdate != null)
@@ -1101,7 +1353,7 @@ namespace Capstone
                     db.Open();
 
                     // Define the SQL query to get the admin details based on the admin ID (acc_id)
-                    string query = "SELECT acc_fname, acc_mname, acc_lname, acc_username, acc_contact, acc_email FROM account_manager WHERE acc_id = @acc_id";
+                    string query = "SELECT emp_fname, emp_mname, emp_lname, emp_username, emp_contact, emp_email FROM employee WHERE emp_id = @acc_id";
 
                     using (var cmd = new NpgsqlCommand(query, db))
                     {
@@ -1113,12 +1365,12 @@ namespace Capstone
                             if (reader.Read())
                             {
                                 // Assign the data to the respective textboxes
-                                txtbfirstname.Text = reader["acc_fname"].ToString();
-                                txtmi.Text = reader["acc_mname"].ToString();
-                                txtLastname.Text = reader["acc_lname"].ToString();
+                                txtbfirstname.Text = reader["emp_fname"].ToString();
+                                txtmi.Text = reader["emp_mname"].ToString();
+                                txtLastname.Text = reader["emp_lname"].ToString();
                                 //txtUsername.Text = reader["acc_username"].ToString();
-                                txtContact.Text = reader["acc_contact"].ToString();
-                                txtEmail.Text = reader["acc_email"].ToString();
+                                txtContact.Text = reader["emp_contact"].ToString();
+                                txtEmail.Text = reader["emp_email"].ToString();
 
                                 AccountManList();
                             }
@@ -1157,7 +1409,7 @@ namespace Capstone
                     using (var cmd = db.CreateCommand())
                     {
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "UPDATE account_manager SET acc_status = 'Suspend' WHERE acc_id = @id";
+                        cmd.CommandText = "UPDATE employee SET emp_status = 'Suspend' WHERE emp_id = @id";
                         cmd.Parameters.AddWithValue("@id", managerId);
 
                         var ctr = cmd.ExecuteNonQuery();
@@ -1194,7 +1446,7 @@ namespace Capstone
                     using (var cmd = db.CreateCommand())
                     {
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "UPDATE account_manager SET acc_status = 'Active' WHERE acc_id = @id";
+                        cmd.CommandText = "UPDATE employee SET emp_status = 'Active' WHERE emp_id = @id";
                         cmd.Parameters.AddWithValue("@id", managerId);
 
                         var ctr = cmd.ExecuteNonQuery();
@@ -1243,7 +1495,7 @@ namespace Capstone
                     using (var cmd = db.CreateCommand())
                     {
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "UPDATE ACCOUNT_MANAGER SET ACC_STATUS = 'Deleted' WHERE ACC_ID = @id";
+                        cmd.CommandText = "UPDATE EMPLOYEE SET EMP_STATUS = 'Deleted' WHERE EMP_ID = @id";
                         cmd.Parameters.AddWithValue("@id", adminId);
 
                         var ctr = cmd.ExecuteNonQuery();

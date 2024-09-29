@@ -100,7 +100,7 @@ namespace Capstone
             string storedHashedPassword; // To store the hashed password from the database
 
             // Check if user is an Admin
-            if (IsAdmin(loginEmail, loginPass, out userId, out storedHashedPassword))
+            if (IsSAM(loginEmail, loginPass, out userId, out storedHashedPassword))
             {
                 // Store necessary session data
                 Session["sam_email"] = loginEmail;
@@ -109,7 +109,18 @@ namespace Capstone
 
                 // Redirect to Admin dashboard
                 Response.Redirect("SAM_AccountMan.aspx");
-                Response.Write("<script>alert('Login Successful!, WELCOME ADMIN');</script>");
+                Response.Write("<script>alert('Login Successful!, WELCOME SUPER ACCOUNT MANAGER');</script>");
+            }
+            else if (IsAM(loginEmail, loginPass, out userId, out storedHashedPassword))
+            {
+                // Store necessary session data
+                Session["am_email"] = loginEmail;
+                Session["am_password"] = storedHashedPassword;
+                Session["am_id"] = userId;  // Store the user ID in the session
+
+                // Redirect to Admin dashboard
+                Response.Redirect("AM_AccountMan.aspx");
+                Response.Write("<script>alert('Login Successful!, WELCOME ACCOUNT MANAGER');</script>");
             }
             else if (IsBilling_Officer(loginEmail, loginPass))
             {
@@ -142,8 +153,59 @@ namespace Capstone
         }
 
 
+        //FOR IsSuperAccountManager
+        private bool IsSAM(string email, string password, out int userId, out string storedHashedPassword)
+        {
+            userId = 0; // Initialize userId
+            storedHashedPassword = null; // Initialize storedHashedPassword
+
+            try
+            {
+                using (var db = new NpgsqlConnection(con))
+                {
+                    db.Open();
+
+                    using (var cmd = db.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+
+                        // Query to get acc_id and acc_password for the provided email
+                        cmd.CommandText = "SELECT emp_id, emp_password FROM employee WHERE emp_email = @email AND role_id = 2 AND emp_status = 'Active'";
+                        cmd.Parameters.AddWithValue("@email", email);
+
+                        using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                userId = reader.GetInt32(0); // Get acc_id
+                                storedHashedPassword = reader.GetString(1); // Get acc_password (hashed)
+
+                                // Hash the provided password
+                                string hashedPassword = HashPassword(password);
+
+                                // Compare the hashed password with the stored one
+                                if (hashedPassword == storedHashedPassword)
+                                {
+                                    return true; // Login successful
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
+            }
+
+            return false; // Login failed
+        }
+
+
+
+
         //FOR IsAdmin
-        private bool IsAdmin(string email, string password, out int userId, out string storedHashedPassword)
+        private bool IsAM(string email, string password, out int userId, out string storedHashedPassword)
         {
             userId = 0; // Initialize userId
             storedHashedPassword = null; // Initialize storedHashedPassword

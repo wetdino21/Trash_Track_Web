@@ -140,7 +140,6 @@
                 z-index: 1; /* Ensure the overlay is on top of the image */
             }
 
-
         /* Style the label to create a custom checkbox appearance */
         .custom-control-input:checked + .custom-control-label::before {
             background-color: #2ba352; /* Change this to your desired background color */
@@ -167,7 +166,7 @@
                             <div class="col-lg-6" style="background: #031c02">
                                 <div class="p-5">
                                     <div class="text-center"">
-                                            <h4  style="color: #2ba352; margin-bottom: 50px; font-weight: 700">Pinoy Basurero Corporation</h4>
+                                            <h4  style="color: #2ba352; margin-bottom: 50px; font-weight: 700">TrashTrack</h4>
 
                                     </div>
                                     <form class="user" runat="server">
