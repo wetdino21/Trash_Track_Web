@@ -98,37 +98,56 @@ namespace Capstone
 
             int userId; // To hold the user ID after successful login
             string storedHashedPassword; // To store the hashed password from the database
+            string roleName;
 
             // Check if user is an Admin
-            if (IsSAM(loginEmail, loginPass, out userId, out storedHashedPassword))
+            if (IsSAM(loginEmail, loginPass, out userId, out storedHashedPassword, out roleName))
             {
                 // Store necessary session data
                 Session["sam_email"] = loginEmail;
                 Session["sam_password"] = storedHashedPassword;
                 Session["sam_id"] = userId;  // Store the user ID in the session
-
+                Session["sam_rolename"] = roleName;
                 // Redirect to Admin dashboard
+                Response.Write($"<script>alert('Login Successful! WELCOME {roleName.ToUpper()}');</script>");
                 Response.Redirect("SAM_AccountMan.aspx");
-                Response.Write("<script>alert('Login Successful!, WELCOME SUPER ACCOUNT MANAGER');</script>");
+                
             }
-            else if (IsAM(loginEmail, loginPass, out userId, out storedHashedPassword))
+            else if (IsAM(loginEmail, loginPass, out userId, out storedHashedPassword, out roleName))
             {
                 // Store necessary session data
                 Session["am_email"] = loginEmail;
                 Session["am_password"] = storedHashedPassword;
                 Session["am_id"] = userId;  // Store the user ID in the session
+                Session["am_rolename"] = roleName;
 
                 // Redirect to Admin dashboard
-                Response.Redirect("AM_AccountMan.aspx");
-                Response.Write("<script>alert('Login Successful!, WELCOME ACCOUNT MANAGER');</script>");
+                Response.Redirect("AM_Dashboard.aspx");
+                Response.Write($"<script>alert('Login Successful! WELCOME {roleName.ToUpper()}');</script>");
             }
-            else if (IsBilling_Officer(loginEmail, loginPass))
+            else if (IsBilling_Officer(loginEmail, loginPass, out userId, out storedHashedPassword, out roleName))
             {
-                Response.Write("<script>alert('Login Successful!, WELCOME BILLING OFFICER!');</script>");
+                // Store necessary session data
+                Session["bo_email"] = loginEmail;
+                Session["bo_password"] = storedHashedPassword;
+                Session["bo_id"] = userId;  // Store the user ID in the session
+                Session["bo_rolename"] = roleName;
+
+                // Redirect to Admin dashboard
+                Response.Redirect("BO_Dashboard.aspx");
+                Response.Write($"<script>alert('Login Successful! WELCOME {roleName.ToUpper()}');</script>");
             }
-            else if (IsOperational_Dispatcher(loginEmail, loginPass))
+            else if (IsOperational_Dispatcher(loginEmail, loginPass, out userId, out storedHashedPassword, out roleName))
             {
-                Response.Write("<script>alert('Login Successful!, WELCOME OPERATIONAL DISPATCHER');</script>");
+                // Store necessary session data
+                Session["od_email"] = loginEmail;
+                Session["od_password"] = storedHashedPassword;
+                Session["od_id"] = userId;  // Store the user ID in the session
+                Session["od_rolename"] = roleName;
+
+                // Redirect to Admin dashboard
+                Response.Redirect("BO_Dashboard.aspx");
+                Response.Write($"<script>alert('Login Successful! WELCOME {roleName.ToUpper()}');</script>");
             }
             else
             {
@@ -154,10 +173,61 @@ namespace Capstone
 
 
         //FOR IsSuperAccountManager
-        private bool IsSAM(string email, string password, out int userId, out string storedHashedPassword)
+        //private bool IsSAM(string email, string password, out int userId, out string storedHashedPassword)
+        //{
+        //    userId = 0; // Initialize userId
+        //    storedHashedPassword = null; // Initialize storedHashedPassword
+
+        //    try
+        //    {
+        //        using (var db = new NpgsqlConnection(con))
+        //        {
+        //            db.Open();
+
+        //            using (var cmd = db.CreateCommand())
+        //            {
+        //                cmd.CommandType = CommandType.Text;
+
+        //                // Query to get acc_id and acc_password for the provided email
+        //                cmd.CommandText = "SELECT emp_id, emp_password FROM employee WHERE emp_email = @email AND role_id = 2 AND emp_status = 'Active'";
+        //                cmd.Parameters.AddWithValue("@email", email);
+
+        //                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+        //                {
+        //                    if (reader.Read())
+        //                    {
+        //                        userId = reader.GetInt32(0); // Get acc_id
+        //                        storedHashedPassword = reader.GetString(1); // Get acc_password (hashed)
+
+        //                        // Hash the provided password
+        //                        string hashedPassword = HashPassword(password);
+
+        //                        // Compare the hashed password with the stored one
+        //                        if (hashedPassword == storedHashedPassword)
+        //                        {
+        //                            return true; // Login successful
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        Response.Write("<script>alert('The login credentials associated was suspended!');</script>");
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
+        //    }
+
+        //    return false; // Login failed
+        //}
+        private bool IsSAM(string email, string password, out int userId, out string storedHashedPassword, out string roleName)
         {
             userId = 0; // Initialize userId
             storedHashedPassword = null; // Initialize storedHashedPassword
+            roleName = null; // Initialize roleName
 
             try
             {
@@ -169,16 +239,22 @@ namespace Capstone
                     {
                         cmd.CommandType = CommandType.Text;
 
-                        // Query to get acc_id and acc_password for the provided email
-                        cmd.CommandText = "SELECT emp_id, emp_password FROM employee WHERE emp_email = @email AND role_id = 2 AND emp_status = 'Active'";
-                        cmd.Parameters.AddWithValue("@email", email);
+                        // Query to get emp_id, emp_password, and role_name where role_id = 2
+                        cmd.CommandText = @"
+                SELECT e.emp_id, e.emp_password, r.role_name 
+                FROM employee e
+                JOIN roles r ON e.role_id = r.role_id 
+                WHERE e.emp_email = @Email AND e.role_id = 2 AND e.emp_status = 'Active'";
+
+                        cmd.Parameters.AddWithValue("@Email", email);
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                userId = reader.GetInt32(0); // Get acc_id
-                                storedHashedPassword = reader.GetString(1); // Get acc_password (hashed)
+                                userId = reader.GetInt32(0); // Get emp_id
+                                storedHashedPassword = reader.GetString(1); // Get emp_password (hashed)
+                                roleName = reader.GetString(2); // Get role_name
 
                                 // Hash the provided password
                                 string hashedPassword = HashPassword(password);
@@ -189,26 +265,36 @@ namespace Capstone
                                     return true; // Login successful
                                 }
                             }
+                            else
+                            {
+                                // If no matching user found, show error
+                                Response.Write("<script>alert('The login credentials associated were not found or suspended!');</script>");
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
+                // Handle exceptions
                 Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
             }
 
             return false; // Login failed
         }
+
+
+
 
 
 
 
         //FOR IsAdmin
-        private bool IsAM(string email, string password, out int userId, out string storedHashedPassword)
+        private bool IsAM(string email, string password, out int userId, out string storedHashedPassword, out string roleName)
         {
             userId = 0; // Initialize userId
             storedHashedPassword = null; // Initialize storedHashedPassword
+            roleName = null; // Initialize roleName
 
             try
             {
@@ -220,16 +306,22 @@ namespace Capstone
                     {
                         cmd.CommandType = CommandType.Text;
 
-                        // Query to get acc_id and acc_password for the provided email
-                        cmd.CommandText = "SELECT acc_id, acc_password FROM account_manager WHERE acc_email = @email AND acc_status = 'Active'";
-                        cmd.Parameters.AddWithValue("@email", email);
+                        // Query to get emp_id, emp_password, and role_name for the provided email where role_id = 1
+                        cmd.CommandText = @"
+                SELECT e.emp_id, e.emp_password, r.role_name 
+                FROM employee e
+                JOIN roles r ON e.role_id = r.role_id 
+                WHERE e.emp_email = @Email AND e.role_id = 1 AND e.emp_status = 'Active'";
+
+                        cmd.Parameters.AddWithValue("@Email", email);
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                userId = reader.GetInt32(0); // Get acc_id
-                                storedHashedPassword = reader.GetString(1); // Get acc_password (hashed)
+                                userId = reader.GetInt32(0); // Get emp_id
+                                storedHashedPassword = reader.GetString(1); // Get emp_password (hashed)
+                                roleName = reader.GetString(2); // Get role_name
 
                                 // Hash the provided password
                                 string hashedPassword = HashPassword(password);
@@ -239,6 +331,10 @@ namespace Capstone
                                 {
                                     return true; // Login successful
                                 }
+                            }
+                            else
+                            {
+                                Response.Write("<script>alert('The login credentials associated were not found or suspended!');</script>");
                             }
                         }
                     }
@@ -254,9 +350,14 @@ namespace Capstone
 
 
 
+
         //FOR IS BILLING OFFICER
-        private bool IsBilling_Officer(string email, string password)
+        private bool IsBilling_Officer(string email, string password, out int userId, out string storedHashedPassword, out string roleName)
         {
+            userId = 0; // Initialize userId
+            storedHashedPassword = null; // Initialize storedHashedPassword
+            roleName = null; // Initialize roleName
+
             try
             {
                 using (var db = new NpgsqlConnection(con))
@@ -266,30 +367,36 @@ namespace Capstone
                     using (var cmd = db.CreateCommand())
                     {
                         cmd.CommandType = CommandType.Text;
-                        // Retrieve salt and hashed password from the database
-                        cmd.CommandText = "SELECT BO_PASSWORD FROM BILLING_OFFICER WHERE BO_EMAIL = @email AND BO_STATUS = 'Active'";
-                        cmd.Parameters.AddWithValue("@email", email);
 
-                        using (NpgsqlDataReader read = cmd.ExecuteReader())
+                        // Query to get emp_id, emp_password, and role_name for the provided email where role_id = 3
+                        cmd.CommandText = @"
+                SELECT e.emp_id, e.emp_password, r.role_name 
+                FROM employee e
+                JOIN roles r ON e.role_id = r.role_id 
+                WHERE e.emp_email = @Email AND e.role_id = 3 AND e.emp_status = 'Active'";
+
+                        cmd.Parameters.AddWithValue("@Email", email);
+
+                        using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
-                            if (read.Read())
+                            if (reader.Read())
                             {
-                                string storedHash = read.GetString(0);
+                                userId = reader.GetInt32(0); // Get emp_id
+                                storedHashedPassword = reader.GetString(1); // Get emp_password (hashed)
+                                roleName = reader.GetString(2); // Get role_name
 
-                                // Hash the provided password with the stored salt
+                                // Hash the provided password
                                 string hashedPassword = HashPassword(password);
 
-                                // Compare the hashed password
-                                if (hashedPassword == storedHash)
+                                // Compare the hashed password with the stored one
+                                if (hashedPassword == storedHashedPassword)
                                 {
-                                    //Sample session
-                                    //Session["id"] = read["bo_id"].ToString();
-                                    //Session["name"] = read["bo_name"].ToString();
-
-                                    //Response.Redirect("Operational_Dispatcher.aspx");
-                                    Response.Write("<script>alert('Login Successful!, Welcome BILLING OFFICER!');</script>");
-                                    return true;
+                                    return true; // Login successful
                                 }
+                            }
+                            else
+                            {
+                                Response.Write("<script>alert('The login credentials associated were not found or suspended!');</script>");
                             }
                         }
                     }
@@ -297,16 +404,21 @@ namespace Capstone
             }
             catch (Exception ex)
             {
-                Response.Write("<script>alert('Message " + ex.Message + "');</script>");
+                Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
             }
 
-            return false;
+            return false; // Login failed
         }
+
 
 
         //FOR IS OPERATIONAL DISPATCHER
-        private bool IsOperational_Dispatcher(string email, string password)
+        private bool IsOperational_Dispatcher(string email, string password, out int userId, out string storedHashedPassword, out string roleName)
         {
+            userId = 0; // Initialize userId
+            storedHashedPassword = null; // Initialize storedHashedPassword
+            roleName = null; // Initialize roleName
+
             try
             {
                 using (var db = new NpgsqlConnection(con))
@@ -316,35 +428,36 @@ namespace Capstone
                     using (var cmd = db.CreateCommand())
                     {
                         cmd.CommandType = CommandType.Text;
-                        // Retrieve salt and hashed password from the database
-                        cmd.CommandText = "SELECT OP_PASSWORD FROM OPERATIONAL_DISPATCHER WHERE OP_EMAIL = @email AND OP_STATUS = 'Active'";
-                        cmd.Parameters.AddWithValue("@email", email);
 
-                        using (NpgsqlDataReader read = cmd.ExecuteReader())
+                        // Query to get emp_id, emp_password, and role_name for the provided email where role_id = 4
+                        cmd.CommandText = @"
+                SELECT e.emp_id, e.emp_password, r.role_name 
+                FROM employee e
+                JOIN roles r ON e.role_id = r.role_id 
+                WHERE e.emp_email = @Email AND e.role_id = 4 AND e.emp_status = 'Active'";
+
+                        cmd.Parameters.AddWithValue("@Email", email);
+
+                        using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
-                            if (read.Read())
+                            if (reader.Read())
                             {
-                                //string storedSalt = read.GetString(0);
-                                string storedHash = read.GetString(0);
+                                userId = reader.GetInt32(0); // Get emp_id
+                                storedHashedPassword = reader.GetString(1); // Get emp_password (hashed)
+                                roleName = reader.GetString(2); // Get role_name
 
-                                // Hash the provided password with the stored salt
+                                // Hash the provided password
                                 string hashedPassword = HashPassword(password);
 
-                                // Compare the hashed password
-                                if (hashedPassword == storedHash)
+                                // Compare the hashed password with the stored one
+                                if (hashedPassword == storedHashedPassword)
                                 {
-                                    //var op_id = read[""];
-                                    //Sample session
-                                    //Session["id"] = read["op_id"].ToString();
-                                    //Session["name"] = read["op_name"].ToString();
-
-                                    //Response.Redirect("Operational_Dispatcher.aspx");
-
-                                    Response.Write("<script>alert('Login Successful!, WELCOME OPERATIONAL DISPATCHER');</script>");
-
-
-                                    return true;
+                                    return true; // Login successful
                                 }
+                            }
+                            else
+                            {
+                                Response.Write("<script>alert('The login credentials associated were not found or suspended!');</script>");
                             }
                         }
                     }
@@ -352,11 +465,12 @@ namespace Capstone
             }
             catch (Exception ex)
             {
-                Response.Write("<script>alert('Message " + ex.Message + "');</script>");
+                Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
             }
 
-            return false;
+            return false; // Login failed
         }
+
 
 
         ////FOR IsHauler

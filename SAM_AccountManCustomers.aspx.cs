@@ -18,10 +18,9 @@ using System.Net;
 using System.Xml.Linq;
 
 
-
 namespace Capstone
 {
-    public partial class Account_Manager_ManageAccount : System.Web.UI.Page
+    public partial class SAM_AccountManCustomers : System.Web.UI.Page
     {
         // Database Connection String
         private readonly string con = "Server=localhost;Port=5432;User Id=postgres;Password=123456;Database=trashtrack";
@@ -35,58 +34,8 @@ namespace Capstone
                 BillinOfficerList();
                 OperationalDispList();
                 LoadProfile();
-
-                //// Fetch data from PostgreSQL
-                //DataTable dt = GetAccountManagers();
-
-                //// Build the HTML for the table body
-                //string tableBodyHtml = string.Empty;
-
-                //foreach (DataRow row in dt.Rows)
-                //{
-                //    tableBodyHtml += "<tr>";
-                //    tableBodyHtml += "<td>" + row["acc_id"] + "</td>"; // ID
-                //    tableBodyHtml += "<td>" + row["acc_fname"] + "</td>"; // First Name
-                //    tableBodyHtml += "<td>" + row["acc_mname"] + "</td>"; // M.I.
-                //    tableBodyHtml += "<td>" + row["acc_lname"] + "</td>"; // Last Name
-                //    tableBodyHtml += "<td>" + row["acc_contact"] + "</td>"; // Contact
-                //    tableBodyHtml += "<td>" + row["acc_email"] + "</td>"; // Email
-                //    tableBodyHtml += "<td>" + Convert.ToDateTime(row["acc_created_at"]).ToString("yyyy/MM/dd") + "</td>"; // Created At
-                //    tableBodyHtml += "<td>" + Convert.ToDateTime(row["acc_updated_at"]).ToString("yyyy/MM/dd") + "</td>"; // Updated At
-                //    tableBodyHtml += "<td>" + row["acc_status"] + "</td>"; // Status
-
-                //    // Status Button (Suspend/Unsuspend)
-                //    if (row["acc_status"].ToString() == "Active")
-                //    {
-                //        tableBodyHtml += "<td><button style='color: lawngreen;' onclick=\"suspend(" + row["acc_id"] + ")\">Suspend ▲</button></td>";
-                //    }
-                //    else if (row["acc_status"].ToString() == "Suspend")
-                //    {
-                //        tableBodyHtml += "<td><button style='color: orangered;' onclick=\"unsuspend(" + row["acc_id"] + ")\">Unsuspend ▼</button></td>";
-                //    }
-                //    else
-                //    {
-                //        tableBodyHtml += "<td>" + row["acc_status"] + "</td>";
-                //    }
-
-                //    // Action Buttons (Edit and Remove)
-                //    tableBodyHtml += "<td>";
-                //    tableBodyHtml += "<a href='EditAccount.aspx?acc_id=" + row["acc_id"] + "'><img src='~/Pictures/editlogo.png' width='35%' height='35%' style='margin-right: 10px;' alt='Edit' /></a>";
-                //    tableBodyHtml += "<a href='RemoveAccount.aspx?acc_id=" + row["acc_id"] + "' onclick=\"return confirm('Are you sure you want to remove this account manager?');\"><img src='~/Pictures/removeBtn.png' width='35%' height='35%' alt='Remove' /></a>";
-                //    tableBodyHtml += "</td>";
-
-                //    tableBodyHtml += "</tr>";
-                //}
-
-                //// Log table body HTML to check content
-                //System.Diagnostics.Debug.WriteLine("Table Body HTML: " + tableBodyHtml);
-
-                //// Inject the HTML into the Literal control
-                //tableBodyLiteral.Text = tableBodyHtml;
             }
-
         }
-
 
 
 
@@ -164,7 +113,7 @@ namespace Capstone
                 string originalFirstname = null;
                 string originalMi = null;
                 string originalLastname = null;
-                
+
                 // Define the PostgreSQL connection
                 using (var db = new NpgsqlConnection(con))
                 {
@@ -232,7 +181,7 @@ namespace Capstone
                 Response.Write("<script>alert('Error loading profile: " + ex.Message + "');</script>");
                 profile_image.ImageUrl = "~/Pictures/blank_prof.png";  // Fallback in case of an error
             }
-        }   
+        }
 
 
 
@@ -335,347 +284,6 @@ namespace Capstone
                 db.Close();
             }
         }
-
-
-
-        //UpdateAdminInfo
-        //protected void UpdateAdminInfo(object sender, EventArgs e)
-        //{
-
-        //    int id;
-        //    if (!int.TryParse(txtbxID.Text, out id))
-        //    {
-        //        Response.Write("<script>alert('Invalid ID format.')</script>");
-        //        return;
-        //    }
-
-        //    string firstname = txtbfirstname.Text;
-        //    string mi = txtmi.Text;
-        //    string lastname = txtLastname.Text;
-        //    string contact = txtContact.Text;
-        //    string email = txtEmail.Text;
-        //    string pass = TextBox1.Text;
-
-        //    // Retrieve the current admin info from the database for comparison
-        //    using (var db = new NpgsqlConnection(con))
-        //    {
-        //        db.Open();
-
-        //        // Get current data for the admin based on the ID
-        //        string selectQuery = "SELECT acc_fname, acc_mname, acc_lname, acc_contact, acc_email, acc_password, acc_profile FROM account_manager WHERE acc_id = @id";
-        //        using (var cmdSelect = new NpgsqlCommand(selectQuery, db))
-        //        {
-        //            cmdSelect.Parameters.AddWithValue("@id", id);
-
-        //            string originalFirstname = null;
-        //            string originalMi = null;
-        //            string originalLastname = null;
-        //            string originalContact = null;
-        //            string originalEmail = null;
-        //            string originalPassword = null;
-        //            byte[] imageData = null;  // To hold the profile image data
-
-        //            using (var reader = cmdSelect.ExecuteReader())
-        //            {
-        //                if (reader.Read())
-        //                {
-        //                    // Store original data
-        //                    originalFirstname = reader["acc_fname"].ToString();
-        //                    originalMi = reader["acc_mname"].ToString();
-        //                    originalLastname = reader["acc_lname"].ToString();
-        //                    originalContact = reader["acc_contact"].ToString();
-        //                    originalEmail = reader["acc_email"].ToString();
-        //                    originalPassword = reader["acc_password"].ToString();
-        //                    //imageData = reader["acc_profile"] as byte[];  // Retrieve profile image data (byte array)
-
-        //                    imageData = reader["acc_profile"] as byte[];  // Retrieve profile image data (byte array)
-
-        //                    if (imageData != null && imageData.Length > 0)
-        //                    {
-        //                        try
-        //                        {
-        //                            string base64String = Convert.ToBase64String(imageData);
-        //                            imagePreviewUpdate.ImageUrl = "data:image/jpeg;base64," + base64String;  // Set image as base64 string
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            Response.Write("<script>alert('Error converting image to Base64: " + ex.Message + "')</script>");
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        imagePreviewUpdate.ImageUrl = "/Pictures/blank_prof.png";
-        //                    }
-        //                }
-        //            }
-
-        //            //// Display profile image in the preview control
-        //            //if (imagePreviewUpdate != null)
-        //            //{
-        //            //    if (imageData != null && imageData.Length > 0)
-        //            //    {
-        //            //        // Convert image data to Base64 string
-        //            //        string base64String = Convert.ToBase64String(imageData);
-        //            //        imagePreviewUpdate.ImageUrl = "data:image/jpeg;base64," + base64String;  // Set image as base64 string
-        //            //    }
-        //            //    else
-        //            //    {
-        //            //        // No image found, use a default image
-        //            //        imagePreviewUpdate.ImageUrl = "~/Pictures/blank_prof.png";
-        //            //    }
-        //            //}
-        //            //else
-        //            //{
-        //            //    // Handle missing image preview control
-        //            //    Response.Write("<script>alert('Image preview control is not found');</script>");
-        //            //}
-        //            //if (imageData == null || imageData.Length == 0)
-        //            //{
-        //            //    Response.Write("<script>alert('No image data found in the database.')</script>");
-        //            //}
-
-
-
-        //            // Build the UPDATE query dynamically based on the fields that have changed
-        //            var updateFields = new List<string>();
-        //            var updateParams = new List<NpgsqlParameter>();
-
-        //            // Track changes to notify via email
-        //            var changes = new List<string>();
-
-        //            // Check each field if it has changed
-        //            if (!string.IsNullOrEmpty(firstname) && firstname != originalFirstname)
-        //            {
-        //                updateFields.Add("acc_fname = @firstname");
-        //                updateParams.Add(new NpgsqlParameter("@firstname", firstname));
-        //                changes.Add($"First Name: {originalFirstname} → {firstname}");
-        //            }
-        //            if (!string.IsNullOrEmpty(mi) && mi != originalMi)
-        //            {
-        //                updateFields.Add("acc_mname = @mi");
-        //                updateParams.Add(new NpgsqlParameter("@mi", mi));
-        //                changes.Add($"Middle Initial: {originalMi} → {mi}");
-        //            }
-        //            if (!string.IsNullOrEmpty(lastname) && lastname != originalLastname)
-        //            {
-        //                updateFields.Add("acc_lname = @lastname");
-        //                updateParams.Add(new NpgsqlParameter("@lastname", lastname));
-        //                changes.Add($"Last Name: {originalLastname} → {lastname}");
-        //            }
-        //            if (!string.IsNullOrEmpty(contact) && contact != originalContact)
-        //            {
-        //                updateFields.Add("acc_contact = @contact");
-        //                updateParams.Add(new NpgsqlParameter("@contact", contact));
-        //                changes.Add($"Contact: {originalContact} → {contact}");
-        //            }
-        //            if (!string.IsNullOrEmpty(email) && email != originalEmail)
-        //            {
-        //                updateFields.Add("acc_email = @email");
-        //                updateParams.Add(new NpgsqlParameter("@email", email));
-        //                changes.Add($"Email: {originalEmail} → {email}");
-        //            }
-        //            if (!string.IsNullOrEmpty(pass) && pass != originalPassword)
-        //            {
-        //                string hashedPassword = HashPassword(pass);
-        //                updateFields.Add("acc_password = @password");
-        //                updateParams.Add(new NpgsqlParameter("@password", hashedPassword));
-        //                changes.Add("Password: (Updated)");
-        //            }
-
-        //            // Only execute the update if there are changes
-        //            if (updateFields.Count > 0)
-        //            {
-        //                string updateQuery = $"UPDATE account_manager SET {string.Join(", ", updateFields)} WHERE acc_id = @id";
-        //                using (var cmdUpdate = new NpgsqlCommand(updateQuery, db))
-        //                {
-        //                    cmdUpdate.Parameters.AddWithValue("@id", id);
-        //                    cmdUpdate.Parameters.AddRange(updateParams.ToArray());
-
-        //                    int updatedRows = cmdUpdate.ExecuteNonQuery();
-        //                    if (updatedRows > 0)
-        //                    {
-        //                        // Prepare email content
-        //                        string changeDetails = string.Join("\n", changes);
-        //                        string subject = "Account Information Update Notification";
-        //                        string body = $"Dear Admin,\n\nYour account information has been updated. Below are the details of the changes:\n\n{changeDetails}\n\nIf you did not request these changes, please contact support immediately.\n\nBest regards,\nThe Account Manager Team";
-
-        //                        // Send email to old email if email has changed
-        //                        if (!string.IsNullOrEmpty(email) && email != originalEmail)
-        //                        {
-        //                            Send_Email(originalEmail, subject, body);  // Send to old email
-        //                            Send_Email(email, subject, body);          // Send to new email
-        //                        }
-        //                        else
-        //                        {
-        //                            Send_Email(originalEmail, subject, body);  // Send to the same email
-        //                        }
-
-        //                        Response.Write("<script>alert('Admin information updated successfully!')</script>");
-        //                    }
-        //                    else
-        //                    {
-        //                        Response.Write("<script>alert('Failed to update admin information.')</script>");
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                Response.Write("<script>alert('No changes detected.')</script>");
-        //            }
-        //        }
-        //    }
-
-        //}
-
-
-
-
-        //protected void UpdateAdminInfo(object sender, EventArgs e)
-        //{
-        //    int id;
-        //    //LoadProfileUpdate(idd);
-        //    if (!int.TryParse(txtbxID.Text, out id))
-        //    {
-        //        Response.Write("<script>alert('Invalid ID format.')</script>");
-        //        return;
-        //    }
-
-        //    string firstname = txtbfirstname.Text;
-        //    string mi = txtmi.Text;
-        //    string lastname = txtLastname.Text;
-        //    string contact = txtContact.Text;
-        //    string email = txtEmail.Text;
-        //    string pass = TextBox1.Text;
-
-        //    using (var db = new NpgsqlConnection(con))
-        //    {
-        //        db.Open();
-
-        //        // Get current data for the admin based on the ID
-        //        string selectQuery = "SELECT acc_fname, acc_mname, acc_lname, acc_contact, acc_email, acc_password FROM account_manager WHERE acc_id = @id";
-        //        using (var cmdSelect = new NpgsqlCommand(selectQuery, db))
-        //        {
-        //            cmdSelect.Parameters.AddWithValue("@id", id);
-
-        //            string originalFirstname = null;
-        //            string originalMi = null;
-        //            string originalLastname = null;
-        //            string originalContact = null;
-        //            string originalEmail = null;
-        //            string originalPassword = null;
-        //            //byte[] imageData = null;  // To hold the profile image data
-
-        //            using (var reader = cmdSelect.ExecuteReader())
-        //            {
-        //                if (reader.Read())
-        //                {
-        //                    // Store original data
-        //                    originalFirstname = reader["acc_fname"].ToString();
-        //                    originalMi = reader["acc_mname"].ToString();
-        //                    originalLastname = reader["acc_lname"].ToString();
-        //                    originalContact = reader["acc_contact"].ToString();
-        //                    originalEmail = reader["acc_email"].ToString();
-        //                    originalPassword = reader["acc_password"].ToString();
-
-        //                }
-        //                else
-        //                {
-        //                    Response.Write("<script>alert('No data found for the specified ID.')</script>");
-        //                    return;
-        //                }
-        //            }
-
-        //            // Build the UPDATE query dynamically based on the fields that have changed
-        //            var updateFields = new List<string>();
-        //            var updateParams = new List<NpgsqlParameter>();
-
-        //            // Track changes to notify via email
-        //            var changes = new List<string>();
-
-        //            // Check each field if it has changed
-        //            if (!string.IsNullOrEmpty(firstname) && firstname != originalFirstname)
-        //            {
-        //                updateFields.Add("acc_fname = @firstname");
-        //                updateParams.Add(new NpgsqlParameter("@firstname", firstname));
-        //                changes.Add($"First Name: {originalFirstname} → {firstname}");
-        //            }
-        //            if (!string.IsNullOrEmpty(mi) && mi != originalMi)
-        //            {
-        //                updateFields.Add("acc_mname = @mi");
-        //                updateParams.Add(new NpgsqlParameter("@mi", mi));
-        //                changes.Add($"Middle Initial: {originalMi} → {mi}");
-        //            }
-        //            if (!string.IsNullOrEmpty(lastname) && lastname != originalLastname)
-        //            {
-        //                updateFields.Add("acc_lname = @lastname");
-        //                updateParams.Add(new NpgsqlParameter("@lastname", lastname));
-        //                changes.Add($"Last Name: {originalLastname} → {lastname}");
-        //            }
-        //            if (!string.IsNullOrEmpty(contact) && contact != originalContact)
-        //            {
-        //                updateFields.Add("acc_contact = @contact");
-        //                updateParams.Add(new NpgsqlParameter("@contact", contact));
-        //                changes.Add($"Contact: {originalContact} → {contact}");
-        //            }
-        //            if (!string.IsNullOrEmpty(email) && email != originalEmail)
-        //            {
-        //                updateFields.Add("acc_email = @email");
-        //                updateParams.Add(new NpgsqlParameter("@email", email));
-        //                changes.Add($"Email: {originalEmail} → {email}");
-        //            }
-        //            if (!string.IsNullOrEmpty(pass) && pass != originalPassword)
-        //            {
-        //                string hashedPassword = HashPassword(pass);
-        //                updateFields.Add("acc_password = @password");
-        //                updateParams.Add(new NpgsqlParameter("@password", hashedPassword));
-        //                changes.Add("Password: (Updated)");
-        //            }
-
-        //            // Only execute the update if there are changes
-        //            if (updateFields.Count > 0)
-        //            {
-        //                string updateQuery = $"UPDATE account_manager SET {string.Join(", ", updateFields)} WHERE acc_id = @id";
-        //                using (var cmdUpdate = new NpgsqlCommand(updateQuery, db))
-        //                {
-        //                    cmdUpdate.Parameters.AddWithValue("@id", id);
-        //                    cmdUpdate.Parameters.AddRange(updateParams.ToArray());
-
-        //                    int updatedRows = cmdUpdate.ExecuteNonQuery();
-        //                    if (updatedRows > 0)
-        //                    {
-        //                        // Prepare email content
-        //                        string changeDetails = string.Join("\n", changes);
-        //                        string subject = "Account Information Update Notification";
-        //                        string body = $"Dear Admin,\n\nYour account information has been updated. Below are the details of the changes:\n\n{changeDetails}\n\nIf you did not request these changes, please contact support immediately.\n\nBest regards,\nThe Account Manager Team";
-
-        //                        // Send email to old email if email has changed
-        //                        if (!string.IsNullOrEmpty(email) && email != originalEmail)
-        //                        {
-        //                            Send_Email(originalEmail, subject, body);  // Send to old email
-        //                            Send_Email(email, subject, body);          // Send to new email
-        //                        }
-        //                        else
-        //                        {
-        //                            Send_Email(originalEmail, subject, body);  // Send to the same email
-        //                        }
-
-        //                        Response.Write("<script>alert('Admin information updated successfully!')</script>");
-        //                    }
-        //                    else
-        //                    {
-        //                        Response.Write("<script>alert('Failed to update admin information.')</script>");
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                Response.Write("<script>alert('No changes detected.')</script>");
-        //            }
-        //        }
-        //    }
-        //}
-
-
 
         protected void UpdateAdminInfo(object sender, EventArgs e)
         {
@@ -1350,10 +958,6 @@ SELECT emp_email AS email, emp_status AS status FROM employee WHERE emp_email = 
                         "swal('Unsuccessfull!', '" + ex.Message + "', 'error')", true);
             }
         }
-
-
-
-
 
 
 

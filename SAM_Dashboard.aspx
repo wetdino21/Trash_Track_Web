@@ -296,38 +296,14 @@
                         <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                             <li>
                                 <a href="SAM_AccountMan.aspx">
-                                    <i class="bi bi-circle"></i><span>Account Manager</span>
+                                    <i class="bi bi-circle"></i><span>Employees</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="SAM_Dispatcher.aspx">
-                                    <i class="bi bi-circle"></i><span>Dispatcher</span>
+                                <a href="SAM_AccountManCustomers.aspx">
+                                    <i class="bi bi-circle"></i><span>Customers</span>
                                 </a>
-                            </li>
-
-                            <li>
-                                <a href="WAREHOUSE_ADD_CATEGORY.aspx">
-                                    <i class="bi bi-circle"></i><span>Drivers</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="SAM_BO.aspx">
-                                    <i class="bi bi-circle"></i><span>Billing Officer</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="Admin_Manage_Customer.aspx">
-                                    <i class="bi bi-circle"></i><span>Non-Contractual</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="Admin_Manage_Customer.aspx">
-                                    <i class="bi bi-circle"></i><span>Contractual</span>
-                                </a>
-                            </li>
+                            </li>                            
 
                         </ul>
                     </li>

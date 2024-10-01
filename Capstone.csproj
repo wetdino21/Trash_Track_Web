@@ -205,6 +205,7 @@
     <Content Include="AM_Dashboard.aspx" />
     <Content Include="BO_Dashboard.aspx" />
     <Content Include="mongocrypt.dll" />
+    <Content Include="SAM_AccountManCustomers.aspx" />
     <Content Include="SAM_AccountSettings.aspx" />
     <Content Include="SAM_BO.aspx" />
     <Content Include="SAM_Dashboard.aspx" />
@@ -2231,6 +2232,13 @@
     </Compile>
     <Compile Include="BO_Dashboard.aspx.designer.cs">
       <DependentUpon>BO_Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SAM_AccountManCustomers.aspx.cs">
+      <DependentUpon>SAM_AccountManCustomers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SAM_AccountManCustomers.aspx.designer.cs">
+      <DependentUpon>SAM_AccountManCustomers.aspx</DependentUpon>
     </Compile>
     <Compile Include="SAM_AccountSettings.aspx.cs">
       <DependentUpon>SAM_AccountSettings.aspx</DependentUpon>

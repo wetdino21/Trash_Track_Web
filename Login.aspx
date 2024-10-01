@@ -187,7 +187,7 @@
 
                                             <!-- Eye Icon for toggling password visibility -->
                                             <span class="toggle-password" onclick="togglePassword()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-                                                <i id="toggleIcon" class="fas fa-eye-slash" style="color: gray;"></i>
+                                                <i id="toggleIcon" class="fas fa-eye-slash"  style="color: gray;"></i>
                                             </span>
                                         </div>
 
@@ -226,7 +226,7 @@
 
     <%--FUNCTION SCRITPS--%>
     <script>
-        function togglePassword() {
+        <%--function togglePassword() {
             var passwordField = document.getElementById('<%= exampleInputPassword.ClientID %>');
             var toggleIcon = document.getElementById('toggleIcon');
 
@@ -239,7 +239,24 @@
                 toggleIcon.classList.remove("fa-eye-slash");
                 toggleIcon.classList.add("fa-eye");
             }
+        }--%>
+
+        function togglePassword() {
+            const password = document.getElementById('<%= exampleInputPassword.ClientID %>');
+            const passIcon = document.getElementById('toggleIcon');
+            if (password.type === "password") {
+                password.type = "text";
+                passIcon.classList.remove("fa-eye-slash");
+                passIcon.classList.add("fa-eye");
+            } else {
+                password.type = "password";
+                passIcon.classList.remove("fa-eye");
+                passIcon.classList.add("fa-eye-slash");
+            }
         }
+
+
+
 
         // Function to handle Remember Me functionality
         function toggleRememberMe() {

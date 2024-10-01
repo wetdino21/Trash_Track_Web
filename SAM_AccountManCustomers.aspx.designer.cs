@@ -11,7 +11,7 @@ namespace Capstone
 {
 
 
-    public partial class Account_Manager_ManageAccount
+    public partial class SAM_AccountManCustomers
     {
 
         /// <summary>
@@ -229,6 +229,15 @@ namespace Capstone
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageMap imagePreview;
+
+        /// <summary>
+        /// ClearForm control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ClearForm;
 
         /// <summary>
         /// submitBtn control.

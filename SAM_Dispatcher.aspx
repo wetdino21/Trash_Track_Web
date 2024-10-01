@@ -255,42 +255,18 @@
         <li class="nav-item">
         <a class="nav-link" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
 <%--          <i class="bi bi-people" style="color:#52996F"></i><span style="color:#52996F">Manage Account</span><i class="bi bi-chevron-down ms-auto" style="color:aquamarine"></i>--%>
-                  <i class="bi bi-people"></i><span>Manage Account</span><i class="bi bi-chevron-down ms-auto"></i>
+                  <i class="bi bi-people"></i><span>Manage Accounts</span><i class="bi bi-chevron-down ms-auto"></i>
 
         </a>
         <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
             <li>
                 <a href="SAM_AccountMan.aspx">
-                    <i class="bi bi-circle"></i><span>Account Manager</span>
+                    <i class="bi bi-circle"></i><span>Employees</span>
                 </a>
             </li>
             <li>
                 <a href="SAM_Dispatcher.aspx" class="active">
-                    <i class="bi bi-circle"></i><span>Dispatcher</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="SAM_Drivers.aspx">
-                    <i class="bi bi-circle"></i><span>Drivers</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="SAM_BO.aspx">
-                    <i class="bi bi-circle"></i><span>Billing Officer</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="Admin_Manage_Customer.aspx">
-                    <i class="bi bi-circle"></i><span>Non-Contractual</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="Admin_Manage_Customer.aspx">
-                    <i class="bi bi-circle"></i><span>Contractual</span>
+                    <i class="bi bi-circle"></i><span>Customers</span>
                 </a>
             </li>
         </ul>
